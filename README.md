@@ -27,9 +27,8 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
-* (Garfonso) store password encrypted 
+### 0.0.2 (2026-01-28)
+* (Garfonso) store password encrypted
 
 ## License
 MIT License

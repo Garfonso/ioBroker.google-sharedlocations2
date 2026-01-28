@@ -1,184 +1,197 @@
 {
-    "common": {
-        "name": "google-sharedlocations2",
-        "version": "0.0.1",
-        "news": {
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "uk": "Початкова версія",
-                "zh-cn": "首次出版"
-            }
-        },
-        "titleLang": {
-            "en": "Google Shared Locations 2",
-            "de": "Von Google freigegebene Standorte 2",
-            "ru": "Общие местоположения Google 2",
-            "pt": "Locais compartilhados do Google 2",
-            "nl": "Google gedeelde locaties 2",
-            "fr": "Emplacements partagés Google 2",
-            "it": "Posizioni condivise di Google 2",
-            "es": "Ubicaciones compartidas de Google 2",
-            "pl": "Udostępnione lokalizacje Google 2",
-            "uk": "Google Shared Locations 2",
-            "zh-cn": "Google 共享位置 2"
-        },
-        "desc": {
-            "en": "Share your location with ioBroker via google maps.",
-            "de": "Teilen Sie Ihren Standort über Google Maps mit ioBroker.",
-            "ru": "Поделитесь своим местоположением с ioBroker через карты Google.",
-            "pt": "Compartilhe sua localização com o ioBroker através do Google Maps.",
-            "nl": "Deel uw locatie met ioBroker via Google Maps.",
-            "fr": "Partagez votre position avec ioBroker via Google Maps.",
-            "it": "Condividi la tua posizione con ioBroker tramite Google Maps.",
-            "es": "Comparte tu ubicación con ioBroker a través de Google Maps.",
-            "pl": "Udostępnij swoją lokalizację ioBrokerowi za pośrednictwem map Google.",
-            "uk": "Поділіться своїм місцезнаходженням з ioBroker через карти Google.",
-            "zh-cn": "通过谷歌地图与 ioBroker 分享您的位置。"
-        },
-        "authors": [
-            "Garfonso <garfonso@mobo.info>"
-        ],
-        "keywords": [
-            "google",
-            "geofence",
-            "gps",
-            "position",
-            "geo"
-        ],
-        "licenseInformation": {
-            "type": "free",
-            "license": "MIT"
-        },
-        "platform": "Javascript/Node.js",
-        "icon": "google-sharedlocations2.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/Garfonso/ioBroker.google-sharedlocations2/main/admin/google-sharedlocations2.png",
-        "readme": "https://github.com/Garfonso/ioBroker.google-sharedlocations2/blob/main/README.md",
-        "loglevel": "info",
-        "tier": 3,
-        "mode": "daemon",
-        "type": "geoposition",
-        "compact": true,
-        "connectionType": "cloud",
-        "dataSource": "poll",
-        "adminUI": {
-            "config": "json"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=6.0.11"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=7.0.23"
-            }
-        ],
-        "osDependencies": {
-            "linux": [
-                "ca-certificates",
-                "fonts-liberation",
-                "libappindicator3-1",
-                "libasound2",
-                "libatk-bridge2.0-0",
-                "libatk1.0-0",
-                "libc6",
-                "libcairo2",
-                "libcups2",
-                "libdbus-1-3",
-                "libexpat1",
-                "libfontconfig1",
-                "libgbm1",
-                "libgcc1",
-                "libglib2.0-0",
-                "libgtk-3-0",
-                "libnspr4",
-                "libnss3",
-                "libpango-1.0-0",
-                "libpangocairo-1.0-0",
-                "libstdc++6",
-                "libx11-6",
-                "libx11-xcb1",
-                "libxcb1",
-                "libxcomposite1",
-                "libxcursor1",
-                "libxdamage1",
-                "libxext6",
-                "libxfixes3",
-                "libxi6",
-                "libxrandr2",
-                "libxrender1",
-                "libxss1",
-                "libxtst6",
-                "lsb-release",
-                "wget",
-                "xdg-utils"
-            ]
-        }
+  "common": {
+    "name": "google-sharedlocations2",
+    "version": "0.0.2",
+    "news": {
+      "0.0.2": {
+        "en": "store password encrypted",
+        "de": "speicher passwort verschlüsselt",
+        "ru": "зашифрованный пароль",
+        "pt": "guardar a senha encriptada",
+        "nl": "wachtwoord versleuteld opslaan",
+        "fr": "crypté du mot de passe de stockage",
+        "it": "negozio password crittografato",
+        "es": "almacenar contraseña cifrada",
+        "pl": "przechowywać zaszyfrowane hasło",
+        "uk": "зашифрований паролем",
+        "zh-cn": "存储加密密码"
+      },
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "uk": "Початкова версія",
+        "zh-cn": "首次出版"
+      }
     },
-    "native": {
-        "googleUsername": "",
-        "googlePassword": "",
-        "pollInterval": 60
+    "titleLang": {
+      "en": "Google Shared Locations 2",
+      "de": "Von Google freigegebene Standorte 2",
+      "ru": "Общие местоположения Google 2",
+      "pt": "Locais compartilhados do Google 2",
+      "nl": "Google gedeelde locaties 2",
+      "fr": "Emplacements partagés Google 2",
+      "it": "Posizioni condivise di Google 2",
+      "es": "Ubicaciones compartidas de Google 2",
+      "pl": "Udostępnione lokalizacje Google 2",
+      "uk": "Google Shared Locations 2",
+      "zh-cn": "Google 共享位置 2"
     },
-    "protectedNative": [
-        "googlePassword"
+    "desc": {
+      "en": "Share your location with ioBroker via google maps.",
+      "de": "Teilen Sie Ihren Standort über Google Maps mit ioBroker.",
+      "ru": "Поделитесь своим местоположением с ioBroker через карты Google.",
+      "pt": "Compartilhe sua localização com o ioBroker através do Google Maps.",
+      "nl": "Deel uw locatie met ioBroker via Google Maps.",
+      "fr": "Partagez votre position avec ioBroker via Google Maps.",
+      "it": "Condividi la tua posizione con ioBroker tramite Google Maps.",
+      "es": "Comparte tu ubicación con ioBroker a través de Google Maps.",
+      "pl": "Udostępnij swoją lokalizację ioBrokerowi za pośrednictwem map Google.",
+      "uk": "Поділіться своїм місцезнаходженням з ioBroker через карти Google.",
+      "zh-cn": "通过谷歌地图与 ioBroker 分享您的位置。"
+    },
+    "authors": [
+      "Garfonso <garfonso@mobo.info>"
     ],
-    "encryptedNative": [
-        "googlePassword"
+    "keywords": [
+      "google",
+      "geofence",
+      "gps",
+      "position",
+      "geo"
     ],
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "role": "indicator.connected",
-                "name": "Device or service connected",
-                "type": "boolean",
-                "read": true,
-                "write": false,
-                "def": false
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.currentCookies",
-            "type": "state",
-            "common": {
-                "role": "state",
-                "name": "Current authentication cookies",
-                "desc": "Overwrite to set cookies manually. Set empty to login again.",
-                "type": "string",
-                "read": true,
-                "write": true,
-                "def": ""
-            }
-        },
-        {
-            "_id": "users",
-            "type": "folder",
-            "common": {
-                "name": "Users",
-                "desc": "Retrieved information on users."
-            },
-            "native": {}
-        }
-    ]
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
+    "platform": "Javascript/Node.js",
+    "icon": "google-sharedlocations2.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/Garfonso/ioBroker.google-sharedlocations2/main/admin/google-sharedlocations2.png",
+    "readme": "https://github.com/Garfonso/ioBroker.google-sharedlocations2/blob/main/README.md",
+    "loglevel": "info",
+    "tier": 3,
+    "mode": "daemon",
+    "type": "geoposition",
+    "compact": true,
+    "connectionType": "cloud",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=7.0.23"
+      }
+    ],
+    "osDependencies": {
+      "linux": [
+        "ca-certificates",
+        "fonts-liberation",
+        "libappindicator3-1",
+        "libasound2",
+        "libatk-bridge2.0-0",
+        "libatk1.0-0",
+        "libc6",
+        "libcairo2",
+        "libcups2",
+        "libdbus-1-3",
+        "libexpat1",
+        "libfontconfig1",
+        "libgbm1",
+        "libgcc1",
+        "libglib2.0-0",
+        "libgtk-3-0",
+        "libnspr4",
+        "libnss3",
+        "libpango-1.0-0",
+        "libpangocairo-1.0-0",
+        "libstdc++6",
+        "libx11-6",
+        "libx11-xcb1",
+        "libxcb1",
+        "libxcomposite1",
+        "libxcursor1",
+        "libxdamage1",
+        "libxext6",
+        "libxfixes3",
+        "libxi6",
+        "libxrandr2",
+        "libxrender1",
+        "libxss1",
+        "libxtst6",
+        "lsb-release",
+        "wget",
+        "xdg-utils"
+      ]
+    }
+  },
+  "native": {
+    "googleUsername": "",
+    "googlePassword": "",
+    "pollInterval": 60
+  },
+  "protectedNative": [
+    "googlePassword"
+  ],
+  "encryptedNative": [
+    "googlePassword"
+  ],
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Device or service connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.currentCookies",
+      "type": "state",
+      "common": {
+        "role": "state",
+        "name": "Current authentication cookies",
+        "desc": "Overwrite to set cookies manually. Set empty to login again.",
+        "type": "string",
+        "read": true,
+        "write": true,
+        "def": ""
+      }
+    },
+    {
+      "_id": "users",
+      "type": "folder",
+      "common": {
+        "name": "Users",
+        "desc": "Retrieved information on users."
+      },
+      "native": {}
+    }
+  ]
 }
