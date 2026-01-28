@@ -66,13 +66,13 @@ class GoogleSharedlocations2 extends utils.Adapter {
         }
 
         //start polling positions
-        await this.pollPositions();
+        this.pollPositions();
         if (this._cookies) {
             await this.sendRequest();
         }
     }
 
-    private async pollPositions() {
+    private pollPositions(): void {
         this._pollTimeout = this.setTimeout(async () => {
             if (!this._cookies) {
                 this.log.debug('Cannot poll positions, no cookies available!');
@@ -85,7 +85,7 @@ class GoogleSharedlocations2 extends utils.Adapter {
         }, this._pollInterval * 1000);
     }
 
-    private async sendRequest() {
+    private async sendRequest(): Promise<void> {
         if (!this._cookies) {
             this.log.error('Cannot send request, no cookies available!');
             await this.setState('info.connection', false, true);
@@ -96,22 +96,22 @@ class GoogleSharedlocations2 extends utils.Adapter {
         this.log.debug('Sending request with current cookies');
         const options = {
             method: 'GET',
-            url: "https://www.google.com/maps/rpc/locationsharing/read",
+            url: 'https://www.google.com/maps/rpc/locationsharing/read',
             headers: {
-                'Cookie': this._cookies,
+                Cookie: this._cookies,
             },
             params: {
-                "authuser": 2,
-                "hl": "en",
-                "gl": "us",
+                authuser: 2,
+                hl: 'en',
+                gl: 'us',
                 //pb is place on map. Is irrelevant, set to google head quarters here.
-                "pb": "!1m7!8m6!1m3!1i14!2i8413!3i5385!2i6!3x4095!2m3!1e0!2sm!3i407105169!3m7!2sen!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!4e1!5m4!1e4!8m2!1e0!1e1!6m9!1e12!2i2!26m1!4b1!30m1!1f1.3953487873077393!39b1!44e1!50e0!23i4111425"
-            }
+                pb: '!1m7!8m6!1m3!1i14!2i8413!3i5385!2i6!3x4095!2m3!1e0!2sm!3i407105169!3m7!2sen!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!4e1!5m4!1e4!8m2!1e0!1e1!6m9!1e12!2i2!26m1!4b1!30m1!1f1.3953487873077393!39b1!44e1!50e0!23i4111425',
+            },
         };
 
         try {
             const response = await axios.request(options);
-            this.log.debug('Request successful, response code: ' + response.status);
+            this.log.debug(`Request successful, response code: ${response.status}`);
             const data = response.data.split('\n').slice(1).join('\n');
             const locationData = JSON.parse(data);
             const locations = locationData[0];
@@ -129,7 +129,7 @@ class GoogleSharedlocations2 extends utils.Adapter {
                 }
             }
         } catch (e) {
-            this.log.error('Error during request: ' + (e as Error).message);
+            this.log.error(`Error during request: ${(e as Error).message}`);
             if (this._successFullPolls > 0) {
                 //try to get new cookie:
                 await this.loginToGetNewCookies();
@@ -148,20 +148,38 @@ class GoogleSharedlocations2 extends utils.Adapter {
                 address: undefined,
                 battery: undefined,
                 timestamp: undefined,
-                accuracy: undefined
+                accuracy: undefined,
             };
 
-            if(locationData && Array.isArray(locationData)) {
+            if (locationData && Array.isArray(locationData)) {
                 // locationData present
-                if(locationData[0] && locationData[0][0]) user['id'] = locationData[0][0];
-                if(locationData[0] && locationData[0][1]) user['photoURL'] = locationData[0][1];
-                if(locationData[0] && locationData[0][3]) user['name'] = locationData[0][3];
-                if(locationData[1] && locationData[1][1] && locationData[1][1][2]) user['lat'] = locationData[1][1][2];
-                if(locationData[1] && locationData[1][1] && locationData[1][1][1]) user['long'] = locationData[1][1][1];
-                if(locationData[1] && locationData[1][4]) user['address'] = locationData[1][4];
-                if(locationData[13] && locationData[13][1]) user['battery'] = locationData[13][1];
-                if(locationData[1] && locationData[1][2]) user['timestamp'] = locationData[1][2];
-                if(locationData[1] && locationData[1][3]) user['accuracy'] = locationData[1][3];
+                if (locationData[0] && locationData[0][0]) {
+                    user.id = locationData[0][0];
+                }
+                if (locationData[0] && locationData[0][1]) {
+                    user.photoURL = locationData[0][1];
+                }
+                if (locationData[0] && locationData[0][3]) {
+                    user.name = locationData[0][3];
+                }
+                if (locationData[1] && locationData[1][1] && locationData[1][1][2]) {
+                    user.lat = locationData[1][1][2];
+                }
+                if (locationData[1] && locationData[1][1] && locationData[1][1][1]) {
+                    user.long = locationData[1][1][1];
+                }
+                if (locationData[1] && locationData[1][4]) {
+                    user.address = locationData[1][4];
+                }
+                if (locationData[13] && locationData[13][1]) {
+                    user.battery = locationData[13][1];
+                }
+                if (locationData[1] && locationData[1][2]) {
+                    user.timestamp = locationData[1][2];
+                }
+                if (locationData[1] && locationData[1][3]) {
+                    user.accuracy = locationData[1][3];
+                }
             }
 
             if (user.id) {
@@ -172,7 +190,7 @@ class GoogleSharedlocations2 extends utils.Adapter {
                     common: {
                         name: user.name || user.id,
                     },
-                    native: {}
+                    native: {},
                 };
                 await this.setObjectNotExistsAsync(basepath, deviceObj as ioBroker.SettableDeviceObject);
 
@@ -188,7 +206,7 @@ class GoogleSharedlocations2 extends utils.Adapter {
                         },
                         native: {},
                     });
-                    await this.setState(`${basepath}.photoURL`, {val: user.photoURL, ts: user.timestamp, ack: true});
+                    await this.setState(`${basepath}.photoURL`, { val: user.photoURL, ts: user.timestamp, ack: true });
                 }
 
                 if (user.name) {
@@ -203,7 +221,7 @@ class GoogleSharedlocations2 extends utils.Adapter {
                         },
                         native: {},
                     });
-                    await this.setState(`${basepath}.name`, {val: user.name, ts: user.timestamp, ack: true});
+                    await this.setState(`${basepath}.name`, { val: user.name, ts: user.timestamp, ack: true });
                 }
 
                 if (user.lat) {
@@ -218,7 +236,7 @@ class GoogleSharedlocations2 extends utils.Adapter {
                         },
                         native: {},
                     });
-                    await this.setState(`${basepath}.lat`, {val: user.lat, ts: user.timestamp, ack: true});
+                    await this.setState(`${basepath}.lat`, { val: user.lat, ts: user.timestamp, ack: true });
                 }
 
                 if (user.long) {
@@ -233,7 +251,7 @@ class GoogleSharedlocations2 extends utils.Adapter {
                         },
                         native: {},
                     });
-                    await this.setState(`${basepath}.long`, { val: user.long, ts: user.timestamp, ack: true});
+                    await this.setState(`${basepath}.long`, { val: user.long, ts: user.timestamp, ack: true });
                 }
 
                 if (user.address) {
@@ -248,7 +266,7 @@ class GoogleSharedlocations2 extends utils.Adapter {
                         },
                         native: {},
                     });
-                    await this.setState(`${basepath}.address`, { val: user.address, ts: user.timestamp, ack: true});
+                    await this.setState(`${basepath}.address`, { val: user.address, ts: user.timestamp, ack: true });
                 }
 
                 if (user.battery !== undefined) {
@@ -260,11 +278,11 @@ class GoogleSharedlocations2 extends utils.Adapter {
                             read: true,
                             write: false,
                             role: 'value.battery',
-                            unit: '%'
+                            unit: '%',
                         },
                         native: {},
                     });
-                    await this.setState(`${basepath}.battery`, { val: user.battery, ts: user.timestamp, ack: true});
+                    await this.setState(`${basepath}.battery`, { val: user.battery, ts: user.timestamp, ack: true });
                 }
 
                 if (user.accuracy !== undefined) {
@@ -276,15 +294,15 @@ class GoogleSharedlocations2 extends utils.Adapter {
                             read: true,
                             write: false,
                             role: 'value.gps.accuracy',
-                            unit: 'm'
+                            unit: 'm',
                         },
                         native: {},
                     });
-                    await this.setState(`${basepath}.accuracy`, { val: user.accuracy, ts: user.timestamp, ack: true});
+                    await this.setState(`${basepath}.accuracy`, { val: user.accuracy, ts: user.timestamp, ack: true });
                 }
             }
         } catch (e) {
-            this.log.error('Could not parse user location data: ' + (e as Error).message);
+            this.log.error(`Could not parse user location data: ${(e as Error).message}`);
         }
     }
 
@@ -301,12 +319,8 @@ class GoogleSharedlocations2 extends utils.Adapter {
             this.log.debug('Starting browser.');
             this._browser = await puppeteer.launch({
                 headless: true,
-                args: [
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox',
-                    '--disable-blink-features=AutomationControlled'
-                ],
-                ignoreDefaultArgs: ['--enable-automation'] //hide automation flag, did not help.
+                args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled'],
+                ignoreDefaultArgs: ['--enable-automation'], //hide automation flag, did not help.
             });
             this.log.debug('browser started, opening new page.');
             const page = await this._browser.newPage();
@@ -315,13 +329,19 @@ class GoogleSharedlocations2 extends utils.Adapter {
             await page.evaluateOnNewDocument(() => {
                 Object.defineProperty(navigator, 'webdriver', { get: () => false });
             });
-            await page.setUserAgent({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' });
+            await page.setUserAgent({
+                userAgent:
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            });
 
             this.log.debug('going to google login page.');
-            await page.goto('https://accounts.google.com/ServiceLogin?hl=de&continue=https://www.google.com/maps&gae=cb-eomtm', {
-                waitUntil: 'networkidle2',
-                timeout: 60000
-            });
+            await page.goto(
+                'https://accounts.google.com/ServiceLogin?hl=de&continue=https://www.google.com/maps&gae=cb-eomtm',
+                {
+                    waitUntil: 'networkidle2',
+                    timeout: 60000,
+                },
+            );
 
             this.log.debug('filling in username and clicking next.');
             await page.locator('#identifierId').fill(this.config.googleUsername);
@@ -358,7 +378,7 @@ class GoogleSharedlocations2 extends utils.Adapter {
             }
             this._browser = null;
         } catch (e) {
-            this.log.error('Error in puppeteer: ' + (e as Error).message);
+            this.log.error(`Error in puppeteer: ${(e as Error).message}`);
         }
     }
 
@@ -379,7 +399,10 @@ class GoogleSharedlocations2 extends utils.Adapter {
             }
             if (this._browser) {
                 //ignore results here.
-                this._browser.close().then(() => {}).catch(() => {});
+                this._browser
+                    .close()
+                    .then(() => {})
+                    .catch(() => {});
             }
             callback();
         } catch (error) {
@@ -419,7 +442,9 @@ class GoogleSharedlocations2 extends utils.Adapter {
                     await this.sendRequest();
                 }
             } else {
-                this.log.info('Current cookies state was changed from outside the adapter, updating internal cookie store.');
+                this.log.info(
+                    'Current cookies state was changed from outside the adapter, updating internal cookie store.',
+                );
                 this._cookies = state.val as string;
             }
         }
@@ -442,9 +467,9 @@ class GoogleSharedlocations2 extends utils.Adapter {
     // }
 }
 //if (require.main !== module) {
-    // Export the constructor in compact mode
-    //module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new GoogleSharedlocations2(options);
+// Export the constructor in compact mode
+//module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new GoogleSharedlocations2(options);
 //} else {
-    // otherwise start the instance directly
-    (() => new GoogleSharedlocations2())();
+// otherwise start the instance directly
+(() => new GoogleSharedlocations2())();
 //}

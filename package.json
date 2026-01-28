@@ -36,6 +36,7 @@
     "@alcalzone/release-script-plugin-manual-review": "^4.0.0",
     "@iobroker/adapter-dev": "^1.5.0",
     "@iobroker/dev-server": "^0.8.0",
+    "@iobroker/eslint-config": "^2.2.0",
     "@iobroker/testing": "^5.2.2",
     "@iobroker/types": "^7.1.0",
     "@tsconfig/node22": "^22.0.5",
@@ -61,7 +62,8 @@
     "test": "npm run test:ts && npm run test:package",
     "translate": "translate-adapter",
     "release": "release-script",
-    "dev-server": "dev-server"
+    "dev-server": "dev-server",
+    "lint": "eslint -c eslint.config.mjs src/"
   },
   "bugs": {
     "url": "https://github.com/Garfonso/ioBroker.google-sharedlocations2/issues"
