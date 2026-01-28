@@ -6,7 +6,8 @@
 // you need to create an adapter
 import * as utils from '@iobroker/adapter-core';
 
-import puppeteer, { type Browser } from 'puppeteer';
+import puppeteer from 'puppeteer';
+import type { Browser } from 'puppeteer';
 import axios from 'axios';
 
 //used to test timeout against
