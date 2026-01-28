@@ -30,7 +30,6 @@ Copyright and trademark of Google are property of Google.
 
 ### **WORK IN PROGRESS**
 * (Garfonso) store password encrypted 
-* (Garfonso) initial release
 
 ## License
 MIT License
