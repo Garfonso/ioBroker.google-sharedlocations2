@@ -2,25 +2,50 @@
     "i18n": true,
     "type": "panel",
     "items": {
-        "option1": {
-            "type": "checkbox",
-            "label": "option1",
+        "_explanation": {
+            "type": "staticText",
+            "label": "Please provide the credentials of an ioBroker Google Account which you share your location with using the Google Maps App. It is strongly recommended to create a dedicated Google Account for this purpose.",
             "newLine": true,
             "xs": 12,
             "sm": 12,
-            "md": 6,
-            "lg": 4,
-            "xl": 4
+            "md": 12,
+            "lg": 12,
+            "xl": 12
         },
-        "option2": {
+        "googleUsername": {
             "type": "text",
-            "label": "option2",
+            "label": "Username of ioBroker Google Account",
             "newLine": true,
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 4
+            "lg": 6,
+            "xl": 6
+        },
+        "googlePassword": {
+            "type": "password",
+            "label": "Password of ioBroker Google Account",
+            "visible": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
+        },
+        "pollInterval": {
+            "type": "number",
+            "label": "Polling Interval (in seconds, at least 60 seconds)",
+            "default": 300,
+            "unit": "s",
+            "min": 60,
+            "max": 86400,
+            "step": 10,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
         }
     }
 }

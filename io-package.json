@@ -125,8 +125,9 @@
         }
     },
     "native": {
-        "option1": true,
-        "option2": "42"
+        "googleUsername": "",
+        "googlePassword": "",
+        "pollInterval": 60
     },
     "objects": [],
     "instanceObjects": [
@@ -148,6 +149,28 @@
                 "read": true,
                 "write": false,
                 "def": false
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.currentCookies",
+            "type": "state",
+            "common": {
+                "role": "state",
+                "name": "Current authentication cookies",
+                "desc": "Overwrite to set cookies manually. Set empty to login again.",
+                "type": "string",
+                "read": true,
+                "write": true,
+                "def": ""
+            }
+        },
+        {
+            "_id": "users",
+            "type": "folder",
+            "common": {
+                "name": "Users",
+                "desc": "Retrieved information on users."
             },
             "native": {}
         }
