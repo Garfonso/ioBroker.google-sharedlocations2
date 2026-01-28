@@ -312,6 +312,11 @@ class GoogleSharedlocations2 extends utils.Adapter {
                 this.log.info('Seems we are already trying to log in. Aborting new login attempt.');
                 return;
             }
+            if (!this.config.googleUsername || !this.config.googlePassword) {
+                this.log.warn('Google username or password not set in adapter configuration. Can not login.');
+                return;
+            }
+
             this.log.info('Trying to login to Google to get new cookies.');
             this._successFullPolls = 0;
 
