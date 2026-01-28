@@ -129,6 +129,12 @@
         "googlePassword": "",
         "pollInterval": 60
     },
+    "protectedNative": [
+        "googlePassword"
+    ],
+    "encryptedNative": [
+        "googlePassword"
+    ],
     "objects": [],
     "instanceObjects": [
         {
