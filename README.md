@@ -27,7 +27,7 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.0.3 (2026-01-28)
 * (Garfonso) prevent login if no username and password is set
 * (Garfonso) fix tests
 

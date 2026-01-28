@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "google-sharedlocations2",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "news": {
+      "0.0.3": {
+        "en": "prevent login if no username and password is set\nfix tests",
+        "de": "verhindern login, wenn kein benutzername und passwort eingestellt ist\ntests repariert",
+        "ru": "предотвратить вход в систему, если имя пользователя и пароль не установлены\nисправление",
+        "pt": "impedir o login se nenhum nome de usuário e senha estiver definido\ncorrigir os testes",
+        "nl": "login voorkomen als er geen gebruikersnaam en wachtwoord is ingesteld\nvastleggen van tests",
+        "fr": "empêcher le login si aucun nom d'utilisateur et mot de passe n'est défini\nessais de correction",
+        "it": "impedire il login se non viene impostato nessun nome utente e password\ntest di correzione",
+        "es": "previene el inicio de sesión si no se establece el nombre de usuario y la contraseña\npruebas de reparación",
+        "pl": "zapobiec logowaniu, jeśli nie jest ustawiona nazwa użytkownika i hasło\nbadania naprawcze",
+        "uk": "заборонити логін, якщо не встановлено ім’я користувача та пароль\nфіксувати тести",
+        "zh-cn": "如果没有设置用户名和密码, 请防止登录\n固定测试"
+      },
       "0.0.2": {
         "en": "store password encrypted",
         "de": "speicher passwort verschlüsselt",
