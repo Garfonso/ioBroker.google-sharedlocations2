@@ -137,7 +137,7 @@ class GoogleSharedlocations2 extends utils.Adapter {
         }
     }
 
-    private async fillIntoObjects(locationData: any) {
+    private async fillIntoObjects(locationData: any): Promise<void> {
         try {
             const user = {
                 id: undefined,
@@ -183,7 +183,7 @@ class GoogleSharedlocations2 extends utils.Adapter {
             }
 
             if (user.id) {
-                const basepath = `users.${user.id}`;
+                const basepath = `users.${user.id as string}`;
                 const deviceObj = {
                     _id: basepath,
                     type: 'device',
