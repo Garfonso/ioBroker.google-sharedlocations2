@@ -95,6 +95,7 @@
     "compact": true,
     "connectionType": "cloud",
     "dataSource": "poll",
+    "messagebox": true,
     "adminUI": {
       "config": "json"
     },
@@ -153,7 +154,9 @@
   "native": {
     "googleUsername": "",
     "googlePassword": "",
-    "pollInterval": 60
+    "pollInterval": 60,
+    "placesInstance": "",
+    "fences": []
   },
   "protectedNative": [
     "googlePassword"
@@ -196,6 +199,15 @@
         "write": true,
         "def": ""
       }
+    },
+    {
+      "_id": "fences",
+      "type": "folder",
+      "common": {
+        "name": "Geofences",
+        "desc": "States for fences defined in the config."
+      },
+      "native": {}
     },
     {
       "_id": "users",

@@ -1,51 +1,135 @@
 {
     "i18n": true,
-    "type": "panel",
-    "items": {
-        "_explanation": {
-            "type": "staticText",
-            "label": "Please provide the credentials of an ioBroker Google Account which you share your location with using the Google Maps App. It is strongly recommended to create a dedicated Google Account for this purpose.",
-            "newLine": true,
-            "xs": 12,
-            "sm": 12,
-            "md": 12,
-            "lg": 12,
-            "xl": 12
+    "type": "tabs",
+    "items": [
+        {
+            "type": "panel",
+            "label": "Google Settings",
+            "items": {
+                "_explanation": {
+                    "type": "staticText",
+                    "label": "Please provide the credentials of an ioBroker Google Account which you share your location with using the Google Maps App. It is strongly recommended to create a dedicated Google Account for this purpose.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
+                "googleUsername": {
+                    "type": "text",
+                    "label": "Username of ioBroker Google Account",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
+                },
+                "googlePassword": {
+                    "type": "password",
+                    "label": "Password of ioBroker Google Account",
+                    "visible": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
+                },
+                "pollInterval": {
+                    "type": "number",
+                    "label": "Polling Interval (in seconds, at least 60 seconds)",
+                    "default": 300,
+                    "unit": "s",
+                    "min": 60,
+                    "max": 86400,
+                    "step": 10,
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
+                }
+            }
         },
-        "googleUsername": {
-            "type": "text",
-            "label": "Username of ioBroker Google Account",
-            "newLine": true,
-            "xs": 12,
-            "sm": 12,
-            "md": 6,
-            "lg": 6,
-            "xl": 6
-        },
-        "googlePassword": {
-            "type": "password",
-            "label": "Password of ioBroker Google Account",
-            "visible": true,
-            "xs": 12,
-            "sm": 12,
-            "md": 6,
-            "lg": 6,
-            "xl": 6
-        },
-        "pollInterval": {
-            "type": "number",
-            "label": "Polling Interval (in seconds, at least 60 seconds)",
-            "default": 300,
-            "unit": "s",
-            "min": 60,
-            "max": 86400,
-            "step": 10,
-            "newLine": true,
-            "xs": 12,
-            "sm": 12,
-            "md": 6,
-            "lg": 6,
-            "xl": 6
+        {
+            "type": "panel",
+            "label": "Geofencing Settings",
+            "items": {
+                "placesInstance": {
+                    "type": "instance",
+                    "label": "Instance of iobroker.places to use (set to -1 to auto-detect)",
+                    "adapter": "places",
+                    "allowDeactivate": true,
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
+                },
+                "fences": {
+                    "type": "table",
+                    "clone": false,
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
+                    "label": "Fences, will create boolean states for each fence to indicate if user is within the fence",
+                    "items": [
+                        {
+                            "type": "text",
+                            "title": "Name of fence",
+                            "width": "20%",
+                            "attr": "name",
+                            "sort": true,
+                            "default": ""
+                        },
+                        {
+                            "type": "number",
+                            "title": "Latitude",
+                            "width": "20%",
+                            "attr": "latitude"
+                        },
+                        {
+                            "type": "number",
+                            "title": "Longitude",
+                            "width": "20%",
+                            "attr": "longitude"
+                        },
+                        {
+                            "type": "number",
+                            "title": "Radius (m)",
+                            "width": "5%",
+                            "attr": "radius",
+                            "default": 100
+                        },
+                        {
+                            "type": "selectSendTo",
+                            "command": "getUsers",
+                            "attr": "user",
+                            "multiple": false,
+                            "title": "Users",
+                            "width": "20%",
+                            "default": ""
+                        },
+                        {
+                            "type": "text",
+                            "title": "Fence ID",
+                            "width": "15%",
+                            "attr": "fenceId",
+                            "defaultFunc": "data.name + data.user",
+                            "alsoDependsOn": [
+                                "name",
+                                "user"
+                            ]
+                        }
+                    ]
+                }
+            }
         }
-    }
+    ]
 }
