@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "google-sharedlocations2",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "news": {
+      "0.1.1": {
+        "en": "improved recovery from login errors",
+        "de": "verbesserte wiederherstellung von login-fehlern",
+        "ru": "улучшенное восстановление после ошибок входа",
+        "pt": "recuperação melhorada de erros de login",
+        "nl": "verbeterd herstel van login fouten",
+        "fr": "amélioration de la récupération des erreurs de connexion",
+        "it": "miglioramento del recupero da errori di login",
+        "es": "mejor recuperación de errores de inicio de sesión",
+        "pl": "poprawa odzyskiwania z błędów logowania",
+        "uk": "поліпшення відновлення від помилок логіна",
+        "zh-cn": "改进登录错误的恢复"
+      },
       "0.1.0": {
         "en": "added: support for places\nadded: support for fences\ntry to prevent login as much as possible.",
         "de": "hinzugefügt: unterstützung für places\nhinzugefügt: unterstützung für fences\nversuche, die anmeldung so weit wie möglich zu verhindern.",
