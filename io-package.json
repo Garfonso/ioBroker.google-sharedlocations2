@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "google-sharedlocations2",
-    "version": "0.0.3",
+    "version": "0.1.0",
     "news": {
+      "0.1.0": {
+        "en": "added: support for places\nadded: support for fences\ntry to prevent login as much as possible.",
+        "de": "hinzugefügt: unterstützung für places\nhinzugefügt: unterstützung für fences\nversuche, die anmeldung so weit wie möglich zu verhindern.",
+        "ru": "добавлено: поддержка мест\nдобавлено: поддержка заборов\nстарайтесь максимально предотвратить вход.",
+        "pt": "adicionado: suporte para locais\nadicionado: suporte para cercas\ntentar evitar o login o máximo possível.",
+        "nl": "toegevoegd: ondersteuning voor plaatsen\ntoegevoegd: steun voor hekken\nproberen zo veel mogelijk inloggen te voorkomen.",
+        "fr": "ajouté: soutien aux places\najouté: soutien aux clôtures\nessayer d'éviter la connexion autant que possible.",
+        "it": "aggiunto: supporto per i luoghi\naggiunto: supporto per recinzioni\ncercare di impedire il login il più possibile.",
+        "es": "añadido: apoyo a los lugares\nañadido: soporte para vallas\ntratar de prevenir la entrada tanto como sea posible.",
+        "pl": "dodane: wsparcie dla miejsc\ndodane: wsparcie dla ogrodzeń\nspróbuj zapobiec logowaniu jak najwięcej.",
+        "uk": "додано: підтримка місць\nдоданий: підтримка парканів\nнамагатися попередити логін якомога простіше.",
+        "zh-cn": "添加:对位置的支持\n添加:支持围栏\n尽量防止登录."
+      },
       "0.0.3": {
         "en": "prevent login if no username and password is set\nfix tests",
         "de": "verhindern login, wenn kein benutzername und passwort eingestellt ist\ntests repariert",
