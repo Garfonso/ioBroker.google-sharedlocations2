@@ -17,9 +17,6 @@ export class Cookie {
     /**
      * Construct cookie helper
      *
-     * @param cookie - current cookie string
-     * @param username - username for login
-     * @param password - password for login
      * @param adapter - adapter instance
      */
     constructor(adapter: GoogleSharedlocations2) {
