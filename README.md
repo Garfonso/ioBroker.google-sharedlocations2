@@ -27,6 +27,9 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) improved recovery from login errors
+
 ### 0.1.0 (2026-02-02)
 * (Garfonso) added: support for places
 * (Garfonso) added: support for fences

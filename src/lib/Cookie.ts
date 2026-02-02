@@ -197,6 +197,15 @@ export class Cookie {
             return true;
         } catch (e) {
             this.log.error(`Error in puppeteer: ${(e as Error).message}`);
+            // try to close browser if open
+            if (this.browser) {
+                try {
+                    await this.browser.close();
+                } catch {
+                    /* ignore */
+                }
+            }
+            this.browser = null;
         }
         return false;
     }
