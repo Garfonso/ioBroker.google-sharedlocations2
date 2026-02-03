@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "google-sharedlocations2",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "news": {
+      "0.2.0": {
+        "en": "now using data directory to store chrome data\ntry to use existing cookie in browser to refresh cookie without login.",
+        "de": "jetzt mit data directory, um chromdaten zu speichern\nversuchen, existierenden cookie im browser zu verwenden, um cookie ohne anmeldung zu aktualisieren.",
+        "ru": "теперь используя директор данных для хранения хромированных данных\nпопробуйте использовать существующий cookie в браузере, чтобы обновить cookie без входа в систему.",
+        "pt": "agora usando o diretor de dados para armazenar dados de cromo\ntentar usar cookie existente no navegador para atualizar cookie sem login.",
+        "nl": "nu met behulp van data director om chroom gegevens op te slaan\nprobeer bestaande cookie in de browser te gebruiken om cookie te vernieuwen zonder in te loggen.",
+        "fr": "maintenant en utilisant le directeur de données pour stocker des données chrome\nessayez d'utiliser le cookie existentint dans le navigateur pour rafraîchir le cookie sans vous connecter.",
+        "it": "ora utilizzando il data director per memorizzare i dati cromati\nprovare a utilizzare cookie esisteint nel browser per aggiornare i cookie senza effettuare il login.",
+        "es": "ahora utilizando el director de datos para almacenar datos de cromo\ntratar de utilizar la cookie existente en el navegador para refrescar la cookie sin login.",
+        "pl": "teraz za pomocą dyrektora danych do przechowywania danych chromowych\nspróbuj użyć plików cookie existint w przeglądarce, aby odświeżyć pliki cookie bez logowania.",
+        "uk": "тепер використовуючи каталог даних для зберігання хромованих даних\nспробуйте використовувати наявний cookie-файли в браузері, щоб оновити cookie без реєстрації.",
+        "zh-cn": "现在使用数据总监存储铬数据\n尝试在浏览器中使用存在 cookie来刷新 cookie而不登录."
+      },
       "0.1.1": {
         "en": "improved recovery from login errors",
         "de": "verbesserte wiederherstellung von login-fehlern",
