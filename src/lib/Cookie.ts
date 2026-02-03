@@ -1,8 +1,7 @@
 import axios from 'axios';
 import type { GoogleSharedlocations2 } from '../main';
-import puppeteer, { Page } from 'puppeteer';
-import type { Browser } from 'puppeteer';
-import { User } from './User';
+import puppeteer from 'puppeteer';
+import type { Browser, Page } from 'puppeteer';
 
 /**
  * Helper class to manage Google cookies.
