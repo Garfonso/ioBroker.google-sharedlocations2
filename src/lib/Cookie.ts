@@ -37,6 +37,7 @@ export class Cookie {
     async init(): Promise<void> {
         this.username = this.adapter.config.googleUsername;
         this.password = this.adapter.config.googlePassword;
+        this.log = this.adapter.log; // does not exist during construction...
         try {
             //ensure data dir exists
             await mkdir(this.dataDir, { recursive: true }); //recursive true should prevent error if already exists.
