@@ -361,14 +361,14 @@ export class GoogleSharedlocations2 extends utils.Adapter {
                 this._successFullPolls = 0;
                 this.cookie.currentCookie = '';
                 await this.cookie.loginToGetNewCookies();
-                if (this.cookie.isValid()) {
-                    await this.sendRequest();
-                }
             } else {
                 this.log.info(
                     'Current cookies state was changed from outside the adapter, updating internal cookie store.',
                 );
                 this.cookie.currentCookie = state.val as string;
+            }
+            if (this.cookie.isValid()) {
+                await this.sendRequest();
             }
         }
     }
