@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { GoogleSharedlocations2 } from '../main';
 import puppeteer from 'puppeteer';
 import type { Browser, Page } from 'puppeteer';
-import { stat, mkdir } from 'fs/promises';
+import { mkdir } from 'fs/promises';
 
 /**
  * Helper class to manage Google cookies.
@@ -192,9 +192,8 @@ export class Cookie {
             const locations = locationData[0];
             if (locations && locations.length > 0) {
                 return locations;
-            } else {
-                this.log.info('No shared locations found in the response, probably not logged in.');
             }
+            this.log.info('No shared locations found in the response, probably not logged in.');
         } catch (e) {
             this.log.error(`Error during request: ${(e as Error).message}`);
         }
