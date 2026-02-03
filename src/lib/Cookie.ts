@@ -1,7 +1,8 @@
 import axios from 'axios';
 import type { GoogleSharedlocations2 } from '../main';
-import puppeteer from 'puppeteer';
+import puppeteer, { Page } from 'puppeteer';
 import type { Browser } from 'puppeteer';
+import { User } from './User';
 
 /**
  * Helper class to manage Google cookies.
@@ -93,7 +94,7 @@ export class Cookie {
     /**
      * Improve the current cookie by making a request to Google My Account page.
      */
-    async improveCookie(): Promise<void> {
+    async improveCookie(): Promise<boolean> {
         //see https://github.com/costastf/locationsharinglib/blob/master/locationsharinglib/locationsharinglib.py#L105
         const options = {
             url: 'https://myaccount.google.com/?hl=en',
@@ -108,12 +109,158 @@ export class Cookie {
 
             if (response.status !== 200) {
                 this.log?.error(`Failed improving cookie: ${response.status}`);
-            } else {
-                await this.augmentCookieFromHeader(response.headers);
+                return false;
             }
+            await this.augmentCookieFromHeader(response.headers);
+            return true;
         } catch (err: any) {
             this.log?.error(err);
             this.log?.info('Connection to google maps failure.');
+            return false;
+        }
+    }
+
+    /**
+     * Start a puppeteer browser instance and return a new page. Sets up user agent and hides automation flag.
+     *
+     * @returns puppeteer page or undefined if browser could not be started
+     */
+    private async startBrowser(): Promise<Page | undefined> {
+        if (this.browser) {
+            this.log.info('Seems we are already trying to log in. Aborting new login attempt.');
+            return;
+        }
+        this.log.debug('Starting browser.');
+        this.browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled'],
+            ignoreDefaultArgs: ['--enable-automation'], //h// ide automation flag, did not help.
+        });
+        this.log.debug('browser started, opening new page.');
+        const page = await this.browser.newPage();
+        //hide puppeteer automation flag
+        await page.evaluateOnNewDocument(() => {
+            Object.defineProperty(navigator, 'webdriver', { get: () => false });
+        });
+        await page.setUserAgent({
+            userAgent:
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        });
+
+        return page;
+    }
+
+    /**
+     * Request location Data from Google Maps
+     *
+     * @returns Array of location data or undefined if request failed
+     */
+    async sendRequest(): Promise<Array<any> | undefined> {
+        if (!this.isValid()) {
+            this.log.error('Cannot send request, no cookies available!');
+            return;
+        }
+
+        //send request with current cookies
+        this.log.debug('Sending request with current cookies');
+        const options = {
+            method: 'GET',
+            url: 'https://www.google.com/maps/rpc/locationsharing/read',
+            headers: {
+                Cookie: this.currentCookie,
+            },
+            params: {
+                authuser: 2,
+                hl: 'en',
+                gl: 'us',
+                //pb is place on map. Is irrelevant, set to google head quarters here.
+                pb: '!1m7!8m6!1m3!1i14!2i8413!3i5385!2i6!3x4095!2m3!1e0!2sm!3i407105169!3m7!2sen!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!4e1!5m4!1e4!8m2!1e0!1e1!6m9!1e12!2i2!26m1!4b1!30m1!1f1.3953487873077393!39b1!44e1!50e0!23i4111425',
+            },
+        };
+
+        try {
+            const response = await axios.request(options);
+            this.log.debug(`Request successful, response code: ${response.status}`);
+            const data = response.data.split('\n').slice(1).join('\n');
+            const locationData = JSON.parse(data);
+            const locations = locationData[0];
+            if (locations && locations.length > 0) {
+                return locations;
+            } else {
+                this.log.info('No shared locations found in the response, probably not logged in.');
+            }
+        } catch (e) {
+            this.log.error(`Error during request: ${(e as Error).message}`);
+        }
+    }
+
+    /**
+     * Get cookies from the given page and store them. Also closes Browser.
+     *
+     * @param page - puppeteer page
+     */
+    private async getCookiesFromPage(page: Page): Promise<void> {
+        //using deprecated function, but browser.cookies just does not work...???
+        const cookies = await page.cookies();
+
+        this.currentCookie = cookies
+            .filter(c => c.domain.includes('google'))
+            .map(c => `${c.name}=${c.value}`)
+            .join('; ');
+        await this.browser!.close();
+        if (this.currentCookie.length < 50) {
+            this.log.warn('Cookie string seems too short, login probably failed!');
+        } else {
+            this.log.info('Obtained new cookies from Google login.');
+            await this.storeCookie();
+        }
+        this.browser = null;
+    }
+
+    /**
+     * Refresh the current cookie by using puppeteer to load Google Maps with existing cookie.
+     *
+     * @returns true if refresh was successful
+     */
+    private async refreshCookie(): Promise<boolean> {
+        if (this.browser) {
+            this.log.info('Seems we are already trying to log in. Aborting new login attempt.');
+            return false;
+        }
+
+        const page = await this.startBrowser();
+        if (!page) {
+            this.log.error('Could not start browser for cookie refresh.');
+            return false;
+        }
+
+        const cookieArray = this.currentCookie
+            .split(';')
+            .map(pair => {
+                const parts = pair.trim().split('=');
+                return parts.length >= 2
+                    ? {
+                          name: parts[0].trim(),
+                          value: parts.slice(1).join('=').trim(),
+                          domain: '.google.com',
+                          path: '/',
+                          secure: true,
+                      }
+                    : null;
+            })
+            .filter(c => c !== null);
+        await page.setCookie(...cookieArray);
+
+        await page.goto('https://www.google.com/maps', { waitUntil: 'networkidle2', timeout: 60000 });
+        await new Promise(r => setTimeout(r, 5000));
+
+        try {
+            await this.sendRequest();
+            await this.getCookiesFromPage(page);
+            return true;
+        } catch (e) {
+            this.log.error(`Error during cookie refresh: ${(e as Error).message}`);
+            return false;
         }
     }
 
@@ -122,6 +269,15 @@ export class Cookie {
      */
     async loginToGetNewCookies(): Promise<boolean> {
         try {
+            if (this.currentCookie && this.currentCookie.length >= 50) {
+                this.log.info('Current cookie seems valid, trying refresh.');
+                await this.refreshCookie();
+                if (this.currentCookie && this.currentCookie.length >= 50) {
+                    this.log.info('Cookie refresh successful, no need to login again.');
+                    return true;
+                }
+            }
+
             if (this.browser) {
                 this.log.info('Seems we are already trying to log in. Aborting new login attempt.');
                 return false;
@@ -133,23 +289,11 @@ export class Cookie {
 
             this.log.info('Trying to login to Google to get new cookies.');
             //testing puppeteer:
-            this.log.debug('Starting browser.');
-            this.browser = await puppeteer.launch({
-                headless: true,
-                args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled'],
-                ignoreDefaultArgs: ['--enable-automation'], //hide automation flag, did not help.
-            });
-            this.log.debug('browser started, opening new page.');
-            const page = await this.browser.newPage();
-
-            //hide puppeteer automation flag
-            await page.evaluateOnNewDocument(() => {
-                Object.defineProperty(navigator, 'webdriver', { get: () => false });
-            });
-            await page.setUserAgent({
-                userAgent:
-                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            });
+            const page = await this.startBrowser();
+            if (!page) {
+                this.log.error('Could not start browser for login.');
+                return false;
+            }
 
             this.log.debug('going to google login page.');
             await page.goto(
@@ -177,23 +321,7 @@ export class Cookie {
 
             await page.goto('https://www.google.com/maps');
             this.log.debug('getting cookies.');
-            //using deprecated function, but browser.cookies just does not work...???
-            const cookies = await page.cookies();
-
-            this.currentCookie = cookies
-                .filter(c => c.domain.includes('google'))
-                .map(c => `${c.name}=${c.value}`)
-                .join('; ');
-            //this.log.debug(this._cookies);
-            //console.log(this._cookies);
-            await this.browser.close();
-            if (this.currentCookie.length < 50) {
-                this.log.warn('Cookie string seems too short, login probably failed!');
-            } else {
-                this.log.info('Obtained new cookies from Google login.');
-                await this.storeCookie();
-            }
-            this.browser = null;
+            await this.getCookiesFromPage(page);
             return true;
         } catch (e) {
             this.log.error(`Error in puppeteer: ${(e as Error).message}`);

@@ -137,10 +137,26 @@ export class GoogleSharedlocations2 extends utils.Adapter {
     }
 
     private async sendRequest(): Promise<void> {
-        if (!this.cookie.isValid()) {
-            this.log.error('Cannot send request, no cookies available!');
+        const results = await this.cookie.sendRequest();
+        if (!results) {
             await this.setState('info.connection', false, true);
-            return;
+            if (this._successFullPolls > 0) {
+                //try to get new cookie:
+                this._successFullPolls = 0;
+                await this.cookie.loginToGetNewCookies();
+            }
+        } else {
+            this._successFullPolls += 1;
+            await this.setState('info.connection', true, true);
+            for (const location of results) {
+                const user = new User(location);
+                if (user.id) {
+                    this._users[user.id] = user;
+                    await this.fillIntoObjects(user);
+                    await this.notifyPlaces(user);
+                    await this.checkFences(user);
+                }
+            }
         }
 
         //send request with current cookies
