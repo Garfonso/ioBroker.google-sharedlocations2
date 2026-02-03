@@ -158,58 +158,6 @@ export class GoogleSharedlocations2 extends utils.Adapter {
                 }
             }
         }
-
-        //send request with current cookies
-        this.log.debug('Sending request with current cookies');
-        const options = {
-            method: 'GET',
-            url: 'https://www.google.com/maps/rpc/locationsharing/read',
-            headers: {
-                Cookie: this.cookie.currentCookie,
-            },
-            params: {
-                authuser: 2,
-                hl: 'en',
-                gl: 'us',
-                //pb is place on map. Is irrelevant, set to google head quarters here.
-                pb: '!1m7!8m6!1m3!1i14!2i8413!3i5385!2i6!3x4095!2m3!1e0!2sm!3i407105169!3m7!2sen!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!4e1!5m4!1e4!8m2!1e0!1e1!6m9!1e12!2i2!26m1!4b1!30m1!1f1.3953487873077393!39b1!44e1!50e0!23i4111425',
-            },
-        };
-
-        try {
-            const response = await axios.request(options);
-            this.log.debug(`Request successful, response code: ${response.status}`);
-            const data = response.data.split('\n').slice(1).join('\n');
-            const locationData = JSON.parse(data);
-            const locations = locationData[0];
-            if (locations && locations.length > 0) {
-                this._successFullPolls += 1;
-                await this.setState('info.connection', true, true);
-                for (const location of locations) {
-                    const user = new User(location);
-                    if (user.id) {
-                        this._users[user.id] = user;
-                        await this.fillIntoObjects(user);
-                        await this.notifyPlaces(user);
-                        await this.checkFences(user);
-                    }
-                }
-            } else {
-                this.log.info('No shared locations found in the response, probably not logged in.');
-                if (this._successFullPolls > 0) {
-                    //try to get new cookie:
-                    this._successFullPolls = 0;
-                    await this.cookie.loginToGetNewCookies();
-                }
-            }
-        } catch (e) {
-            this.log.error(`Error during request: ${(e as Error).message}`);
-            if (this._successFullPolls > 0) {
-                //try to get new cookie:
-                this._successFullPolls = 0;
-                await this.cookie.loginToGetNewCookies();
-            }
-        }
     }
 
     private async fillIntoObjects(user: User): Promise<void> {
