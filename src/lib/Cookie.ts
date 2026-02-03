@@ -2,6 +2,7 @@ import axios from 'axios';
 import type { GoogleSharedlocations2 } from '../main';
 import puppeteer from 'puppeteer';
 import type { Browser, Page } from 'puppeteer';
+import { stat, mkdir } from 'fs/promises';
 
 /**
  * Helper class to manage Google cookies.
@@ -13,18 +14,21 @@ export class Cookie {
     adapter: GoogleSharedlocations2;
     log;
     private browser: Browser | null = null;
+    dataDir: string;
 
     /**
      * Construct cookie helper
      *
      * @param adapter - adapter instance
+     * @param dataDir - data directory of the instance to store browser data to.
      */
-    constructor(adapter: GoogleSharedlocations2) {
+    constructor(adapter: GoogleSharedlocations2, dataDir: string) {
         this.currentCookie = '';
         this.username = '';
         this.password = '';
         this.adapter = adapter;
         this.log = adapter.log;
+        this.dataDir = dataDir;
     }
 
     /**
@@ -34,6 +38,8 @@ export class Cookie {
         this.username = this.adapter.config.googleUsername;
         this.password = this.adapter.config.googlePassword;
         try {
+            //ensure data dir exists
+            await mkdir(this.dataDir, { recursive: true }); //recursive true should prevent error if already exists.
             const state = await this.adapter.getStateAsync('info.currentCookies');
             if (state && state.val && typeof state.val === 'string') {
                 this.currentCookie = state.val;
@@ -134,6 +140,7 @@ export class Cookie {
             headless: true,
             args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled'],
             ignoreDefaultArgs: ['--enable-automation'], //h// ide automation flag, did not help.
+            userDataDir: this.dataDir,
         });
         this.log.debug('browser started, opening new page.');
         const page = await this.browser.newPage();
