@@ -150,7 +150,12 @@ export class GoogleSharedlocations2 extends utils.Adapter {
             for (const location of results) {
                 const user = new User(location);
                 if (user.id) {
-                    this._users[user.id] = user;
+                    const oldTS = this._users[user.id]?.timestamp || 0;
+                    this._users[user.id] = user; // should I try to merge stuff here? Or is it always completely filled?
+                    if (user.timestamp && user.timestamp <= oldTS) {
+                        this.log.debug(`Ignoring older or same location data for user ${user.id}`);
+                        continue;
+                    }
                     await this.fillIntoObjects(user);
                     await this.notifyPlaces(user);
                     await this.checkFences(user);
