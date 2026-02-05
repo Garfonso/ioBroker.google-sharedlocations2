@@ -1,5 +1,17 @@
 {
+    "Fences, will create boolean states for each fence to indicate if user is within the fence": "Fences створить логічні стани для кожної огорожі, щоб вказати, чи перебуває користувач у межах огорожі",
+    "Geofencing Settings": "Налаштування геозон",
+    "Google Settings": "Налаштування Google",
+    "ID of state": "ID держ",
+    "Instance of iobroker.places to use": "Примірник iobroker.places для використання",
+    "Latitude": "Широта",
+    "Longitude": "Довгота",
+    "Name of fence": "Назва огорожі",
+    "Password of ioBroker Google Account": "Пароль облікового запису Google ioBroker",
+    "Polling Interval (in seconds, at least 60 seconds)": "Інтервал опитування (у секундах, не менше 60 секунд)",
+    "Radius (m)": "Радіус (м)",
+    "User": "Користувач",
+    "Username of ioBroker Google Account": "Ім'я користувача облікового запису Google ioBroker",
     "google-sharedlocations2 adapter settings": "Налаштування адаптера для google-sharedlocations2",
-    "option1": "варіант1",
-    "option2": "варіант2"
+    "labelAccountHint": "Надайте облікові дані облікового запису Google ioBroker, якому ви надаєте доступ до свого місцезнаходження за допомогою програми Google Maps. Для цього наполегливо рекомендується створити спеціальний обліковий запис Google."
 }

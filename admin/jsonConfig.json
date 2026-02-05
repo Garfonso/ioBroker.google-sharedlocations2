@@ -8,7 +8,7 @@
             "items": {
                 "_explanation": {
                     "type": "staticText",
-                    "label": "Please provide the credentials of an ioBroker Google Account which you share your location with using the Google Maps App. It is strongly recommended to create a dedicated Google Account for this purpose.",
+                    "label": "labelAccountHint",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -59,7 +59,7 @@
             "items": {
                 "placesInstance": {
                     "type": "instance",
-                    "label": "Instance of iobroker.places to use (set to -1 to auto-detect)",
+                    "label": "Instance of iobroker.places to use",
                     "adapter": "places",
                     "allowDeactivate": true,
                     "newLine": true,
@@ -112,13 +112,13 @@
                             "command": "getUsers",
                             "attr": "user",
                             "multiple": false,
-                            "title": "Users",
+                            "title": "User",
                             "width": "20%",
                             "default": ""
                         },
                         {
                             "type": "text",
-                            "title": "Fence ID",
+                            "title": "ID of state",
                             "width": "15%",
                             "attr": "fenceId",
                             "defaultFunc": "data.name + data.user",

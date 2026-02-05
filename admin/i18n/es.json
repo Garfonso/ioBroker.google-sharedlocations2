@@ -1,5 +1,17 @@
 {
+    "Fences, will create boolean states for each fence to indicate if user is within the fence": "Cercas, creará estados booleanos para cada cerca para indicar si el usuario está dentro de la cerca.",
+    "Geofencing Settings": "Configuración de geocercas",
+    "Google Settings": "Configuración de Google",
+    "ID of state": "identificación del estado",
+    "Instance of iobroker.places to use": "Instancia de iobroker.lugares para usar",
+    "Latitude": "Latitud",
+    "Longitude": "Longitud",
+    "Name of fence": "nombre de la valla",
+    "Password of ioBroker Google Account": "Contraseña de la cuenta de Google de ioBroker",
+    "Polling Interval (in seconds, at least 60 seconds)": "Intervalo de sondeo (en segundos, al menos 60 segundos)",
+    "Radius (m)": "Radio (m)",
+    "User": "Usuario",
+    "Username of ioBroker Google Account": "Nombre de usuario de la cuenta de Google de ioBroker",
     "google-sharedlocations2 adapter settings": "Ajustes del adaptador para google-sharedlocations2",
-    "option1": "opción1",
-    "option2": "opción2"
+    "labelAccountHint": "Proporcione las credenciales de una cuenta de Google de ioBroker con la que comparte su ubicación mediante la aplicación Google Maps. Se recomienda encarecidamente crear una cuenta de Google dedicada para este fin."
 }

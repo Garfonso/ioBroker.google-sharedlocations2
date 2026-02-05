@@ -1,5 +1,17 @@
 {
+    "Fences, will create boolean states for each fence to indicate if user is within the fence": "Hekken, creëert booleaanse toestanden voor elk hek om aan te geven of de gebruiker zich binnen het hek bevindt",
+    "Geofencing Settings": "Geofencing-instellingen",
+    "Google Settings": "Google-instellingen",
+    "ID of state": "Identiteitskaart van de staat",
+    "Instance of iobroker.places to use": "Instantie van iobroker.places om te gebruiken",
+    "Latitude": "Breedte",
+    "Longitude": "Lengte",
+    "Name of fence": "Naam hek",
+    "Password of ioBroker Google Account": "Wachtwoord van ioBroker Google-account",
+    "Polling Interval (in seconds, at least 60 seconds)": "Polling-interval (in seconden, minimaal 60 seconden)",
+    "Radius (m)": "Straal (m)",
+    "User": "Gebruiker",
+    "Username of ioBroker Google Account": "Gebruikersnaam van ioBroker Google-account",
     "google-sharedlocations2 adapter settings": "Adapterinstellingen voor google-sharedlocations2",
-    "option1": "optie1",
-    "option2": "optie2"
+    "labelAccountHint": "Geef de inloggegevens op van een ioBroker Google-account waarmee u uw locatie deelt via de Google Maps-app. Het wordt sterk aanbevolen om hiervoor een speciaal Google-account aan te maken."
 }

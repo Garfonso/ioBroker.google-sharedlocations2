@@ -1,5 +1,17 @@
 {
+    "Fences, will create boolean states for each fence to indicate if user is within the fence": "Recinti: creerà stati booleani per ciascun recinto per indicare se l'utente si trova all'interno del recinto",
+    "Geofencing Settings": "Impostazioni del geofencing",
+    "Google Settings": "Impostazioni di Google",
+    "ID of state": "ID dello stato",
+    "Instance of iobroker.places to use": "Istanza di iobroker.places da utilizzare",
+    "Latitude": "Latitudine",
+    "Longitude": "Longitudine",
+    "Name of fence": "Nome della recinzione",
+    "Password of ioBroker Google Account": "Password dell'account Google ioBroker",
+    "Polling Interval (in seconds, at least 60 seconds)": "Intervallo di polling (in secondi, almeno 60 secondi)",
+    "Radius (m)": "Raggio (m)",
+    "User": "Utente",
+    "Username of ioBroker Google Account": "Nome utente dell'account Google ioBroker",
     "google-sharedlocations2 adapter settings": "Impostazioni dell'adattatore per google-sharedlocations2",
-    "option1": "opzione1",
-    "option2": "opzione2"
+    "labelAccountHint": "Fornisci le credenziali di un account Google ioBroker con cui condividi la tua posizione utilizzando l'app Google Maps. Si consiglia vivamente di creare un account Google dedicato a questo scopo."
 }

@@ -1,5 +1,17 @@
 {
+    "Fences, will create boolean states for each fence to indicate if user is within the fence": "Fences erstellen boolesche Zustände für jeden Fence, um anzuzeigen, ob sich der Benutzer innerhalb des Bereichs befindet",
+    "Geofencing Settings": "Geofencing-Einstellungen",
+    "Google Settings": "Google-Einstellungen",
+    "ID of state": "ID des Staates",
+    "Instance of iobroker.places to use": "Zu verwendende Instanz von iobroker.places",
+    "Latitude": "Breitengrad",
+    "Longitude": "Längengrad",
+    "Name of fence": "Name des Bereichs",
+    "Password of ioBroker Google Account": "Passwort des ioBroker-Google-Kontos",
+    "Polling Interval (in seconds, at least 60 seconds)": "Abfrageintervall (in Sekunden, mindestens 60 Sekunden)",
+    "Radius (m)": "Radius (m)",
+    "User": "Benutzer",
+    "Username of ioBroker Google Account": "Benutzername des ioBroker-Google-Kontos",
     "google-sharedlocations2 adapter settings": "Adaptereinstellungen für google-sharedlocations2",
-    "option1": "Option1",
-    "option2": "Option2"
+    "labelAccountHint": "Bitte geben Sie die Anmeldeinformationen eines ioBroker-Google-Kontos an, mit dem Sie Ihren Standort über die Google Maps-App teilen. Es wird dringend empfohlen, zu diesem Zweck ein dediziertes Google-Konto zu erstellen."
 }
