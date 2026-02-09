@@ -92,7 +92,9 @@ export class Cookie {
             }
 
             this.currentCookie = cookies.map(cv => cv.join('=')).join('; ');
-            this.log?.debug(`Cookie updated. Length: ${oldLength} -> ${this.currentCookie.length}`);
+            if (oldLength !== this.currentCookie.length) {
+                this.log?.debug(`Cookie updated. Length: ${oldLength} -> ${this.currentCookie.length}`);
+            }
             return this.storeCookie();
         }
     }
@@ -192,6 +194,7 @@ export class Cookie {
             const locationData = JSON.parse(data);
             const locations = locationData[0];
             if (locations && locations.length > 0) {
+                await this.augmentCookieFromHeader(response.headers);
                 return locations;
             }
             this.log.info('No shared locations found in the response, probably not logged in.');
@@ -234,6 +237,7 @@ export class Cookie {
             return false;
         }
 
+        this.log.debug('Trying to refresh cookie by loading Google Maps with existing cookie in Browser.');
         const page = await this.startBrowser();
         if (!page) {
             this.log.error('Could not start browser for cookie refresh.');
