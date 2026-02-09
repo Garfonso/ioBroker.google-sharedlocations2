@@ -231,12 +231,25 @@
       "type": "state",
       "common": {
         "role": "state",
-        "name": "Current authentication cookies",
+        "name": "Current authentication cookies (write only)",
         "desc": "Overwrite to set cookies manually. Set empty to login again.",
         "type": "string",
-        "read": true,
+        "read": false,
         "write": true,
         "def": ""
+      }
+    },
+    {
+      "_id": "info.cookieStore",
+      "type": "state",
+      "common": {
+        "role": "state",
+        "name": "JSON cookie store with all data",
+        "desc": "please don't mess up",
+        "type": "object",
+        "read": true,
+        "write": false,
+        "def": "[]"
       }
     },
     {

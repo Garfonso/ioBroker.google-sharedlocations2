@@ -364,13 +364,13 @@ export class GoogleSharedlocations2 extends utils.Adapter {
             if (state.val === '') {
                 this.log.info('Current cookies state was cleared, trying to obtain new cookies.');
                 this._successFullPolls = 0;
-                this.cookie.currentCookie = '';
+                this.cookie.readCookieFromString(''); //clear old cookie
                 await this.cookie.loginToGetNewCookies();
             } else {
                 this.log.info(
                     'Current cookies state was changed from outside the adapter, updating internal cookie store.',
                 );
-                this.cookie.currentCookie = state.val as string;
+                this.cookie.readCookieFromString(state.val as string);
             }
             if (this.cookie.isValid()) {
                 await this.sendRequest();

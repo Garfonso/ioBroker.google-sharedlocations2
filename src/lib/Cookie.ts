@@ -1,14 +1,14 @@
 import axios from 'axios';
 import type { GoogleSharedlocations2 } from '../main';
 import puppeteer from 'puppeteer';
-import type { Browser, Page } from 'puppeteer';
+import type { Browser, Page, CookieData } from 'puppeteer';
 import { mkdir } from 'fs/promises';
 
 /**
  * Helper class to manage Google cookies.
  */
 export class Cookie {
-    currentCookie: string;
+    cookies: CookieData[] = [];
     username?: string;
     password?: string;
     adapter: GoogleSharedlocations2;
@@ -23,7 +23,6 @@ export class Cookie {
      * @param dataDir - data directory of the instance to store browser data to.
      */
     constructor(adapter: GoogleSharedlocations2, dataDir: string) {
-        this.currentCookie = '';
         this.username = '';
         this.password = '';
         this.adapter = adapter;
@@ -41,15 +40,32 @@ export class Cookie {
         try {
             //ensure data dir exists
             await mkdir(this.dataDir, { recursive: true }); //recursive true should prevent error if already exists.
-            const state = await this.adapter.getStateAsync('info.currentCookies');
+            const state = await this.adapter.getStateAsync('info.cookieStore');
+            const stringState = await this.adapter.getStateAsync('info.currentCookies');
             if (state && state.val && typeof state.val === 'string') {
-                this.currentCookie = state.val;
-                this.log?.debug('Loaded cookie from state.');
-            } else {
-                this.currentCookie = '';
-                this.log?.debug('No cookie found in state, trying to log in to get new one.');
-                await this.loginToGetNewCookies();
+                try {
+                    this.cookies = JSON.parse(state.val);
+                    this.log?.debug(`Loaded ${this.cookies.length} cookies from state.`);
+                    if (this.isValid()) {
+                        return;
+                    }
+                } catch (e) {
+                    this.log?.error(
+                        `Error parsing cookies from state: ${(e as Error).message}, using string as cookie.`,
+                    );
+                }
             }
+
+            if (stringState && stringState.val && typeof stringState.val === 'string') {
+                this.log?.debug('Loaded cookie string from state, trying to convert to new format.');
+                this.readCookieFromString(stringState.val);
+                if (this.isValid()) {
+                    return;
+                }
+            }
+
+            this.log?.debug('No cookie found in states, trying to log in to get new one.');
+            await this.loginToGetNewCookies();
         } catch (err: any) {
             this.log?.error(`Error loading cookie from state: ${err}`);
         }
@@ -60,10 +76,33 @@ export class Cookie {
      */
     async storeCookie(): Promise<void> {
         try {
-            await this.adapter.setStateAsync('info.currentCookies', this.currentCookie, true);
+            await this.adapter.setState('info.cookieStore', JSON.stringify(this.cookies), true);
         } catch (err: any) {
             this.log?.error(`Error storing cookie: ${err}`);
         }
+    }
+
+    /**
+     * Read cookie from a string in the format "name=value; name2=value2" and store it in the cookies array.
+     *
+     * @param cookieString - cookie string to read from
+     */
+    readCookieFromString(cookieString: string): void {
+        this.cookies = cookieString
+            .split(';')
+            .map(pair => {
+                const parts = pair.trim().split('=');
+                return parts.length >= 2
+                    ? {
+                          name: parts[0].trim(),
+                          value: parts.slice(1).join('=').trim(),
+                          domain: '.google.com',
+                          path: '/',
+                          secure: true,
+                      }
+                    : null;
+            })
+            .filter(c => c !== null);
     }
 
     /**
@@ -74,27 +113,64 @@ export class Cookie {
     async augmentCookieFromHeader(headers: Record<string, any>): Promise<void> {
         if (headers['set-cookie'] && headers['set-cookie'].length) {
             this.log?.debug('New header received.');
-            const oldLength = this.currentCookie.length;
-            const cookies = this.currentCookie.split('; ').map(c => c.split('='));
+            const oldLength = this.cookies.length;
 
             //split old cookie and new cookie. Update single values.
             for (const header of headers['set-cookie']) {
-                const incomingCookies = header.split('; ');
-                for (const cookie of incomingCookies) {
-                    const [name, value] = cookie.split('=');
-                    const cIndex = cookies.findIndex(c => c[0] === name);
-                    if (cIndex < 0) {
-                        cookies.push([name, value]); //add
-                    } else {
-                        cookies[cIndex][1] = value; //update
+                //console.log('Processing header cookie:', header);
+                const keyValues = header.split('; ');
+                const [name, value] = keyValues.shift().split('='); // first part is cookie, rest are attributes like path, secure etc.
+                const cookie = {
+                    name: name.trim(),
+                    value: value.trim(),
+                    domain: '.google.com',
+                } as CookieData;
+                for (const kv of keyValues) {
+                    const [k, v] = kv.split('=');
+                    switch (k.toLowerCase()) {
+                        case 'domain':
+                            cookie.domain = v ? v.trim() : '.google.com';
+                            break;
+                        case 'path':
+                            cookie.path = v ? v.trim() : '/';
+                            break;
+                        case 'secure':
+                            cookie.secure = true;
+                            break;
+                        case 'httponly':
+                            cookie.httpOnly = true;
+                            break;
+                        case 'samesite':
+                            cookie.sameSite = v ? v.trim() : 'Lax';
+                            break;
+                        case 'expires':
+                            cookie.expires = new Date(v).getTime() / 1000; //puppeteer expects expires in seconds, not milliseconds
+                            break;
+                        case 'priority':
+                            cookie.priority = v ? v.trim() : 'Medium';
+                            break;
+                        default:
+                            this.log.debug(`Unknown cookie attribute: ${k}=${v}`);
                     }
+                }
+                const cIndex = this.cookies.findIndex(c => c.name === name);
+                if (cIndex < 0) {
+                    this.log.debug(`Adding new cookie from header: ${cookie.name}=${cookie.value}`);
+                    this.cookies.push(cookie); //add
+                } else {
+                    this.log.debug(`Updating cookie from header: ${cookie.name}=${cookie.value}`);
+                    this.cookies[cIndex] = cookie; //update
                 }
             }
 
-            this.currentCookie = cookies.map(cv => cv.join('=')).join('; ');
-            if (oldLength !== this.currentCookie.length) {
-                this.log?.debug(`Cookie updated. Length: ${oldLength} -> ${this.currentCookie.length}`);
-            }
+            this.cookies
+                .filter(c => c.expires && c.expires < Date.now() / 1000)
+                .forEach(c =>
+                    this.log.debug(`Cookie ${c.name} expired at ${new Date(c.expires! * 1000).toISOString()}`),
+                );
+            this.cookies = this.cookies.filter(c => !c.expires || c.expires > Date.now() / 1000); //remove expired cookies
+
+            this.log?.debug(`Cookie updated. Length: ${oldLength} -> ${this.cookies.length}`);
             return this.storeCookie();
         }
     }
@@ -107,7 +183,7 @@ export class Cookie {
         const options = {
             url: 'https://myaccount.google.com/?hl=en',
             headers: {
-                Cookie: this.currentCookie,
+                Cookie: this.cookies.map(c => `${c.name}=${c.value}`).join('; '),
             },
             method: 'get',
         };
@@ -176,7 +252,7 @@ export class Cookie {
             method: 'GET',
             url: 'https://www.google.com/maps/rpc/locationsharing/read',
             headers: {
-                Cookie: this.currentCookie,
+                Cookie: this.cookies.map(c => `${c.name}=${c.value}`).join('; '),
             },
             params: {
                 authuser: 2,
@@ -211,16 +287,16 @@ export class Cookie {
     private async getCookiesFromPage(page: Page): Promise<void> {
         //using deprecated function, but browser.cookies just does not work...???
         const cookies = await page.cookies();
+        const browserCookies = await this.browser!.cookies();
+        this.log.debug(`Got ${cookies.length} cookies from page, ${browserCookies.length} from browser.cookies().`);
 
-        this.currentCookie = cookies
-            .filter(c => c.domain.includes('google'))
-            .map(c => `${c.name}=${c.value}`)
-            .join('; ');
+        this.cookies = cookies.filter(c => c.domain.includes('google')); //only keep google cookies, maybe some other cookies are set during login which we do not want to store.
         await this.browser!.close();
-        if (this.currentCookie.length < 50) {
+        if (this.isValid()) {
             this.log.warn('Cookie string seems too short, login probably failed!');
         } else {
-            this.log.info('Obtained new cookies from Google login.');
+            this.log.info(`Obtained new cookies from Google login with length ${this.cookies.length}.`);
+            this.cookies = cookies;
             await this.storeCookie();
         }
         this.browser = null;
@@ -278,10 +354,10 @@ export class Cookie {
      */
     async loginToGetNewCookies(): Promise<boolean> {
         try {
-            if (this.currentCookie && this.currentCookie.length >= 50) {
+            if (this.isValid()) {
                 this.log.info('Current cookie seems valid, trying refresh.');
-                await this.refreshCookie();
-                if (this.currentCookie && this.currentCookie.length >= 50) {
+                await this.refreshCookieWithBrowser();
+                if (this.isValid()) {
                     this.log.info('Cookie refresh successful, no need to login again.');
                     return true;
                 }
@@ -361,6 +437,8 @@ export class Cookie {
      * Check if the current cookie is valid.
      */
     isValid(): boolean {
-        return this.currentCookie.length > 50;
+        // we can not really check if cookie is valid without sending a request, but if the cookie string is very short, it is probably not valid.
+        // maybe change that to some check against the array length in future?
+        return this.cookies.map(c => `${c.name}=${c.value}`).join('; ').length > 50;
     }
 }
