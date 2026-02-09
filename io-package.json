@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "google-sharedlocations2",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "news": {
+      "0.3.2": {
+        "en": "refresh with browser ignores cookies from adapter",
+        "de": "mit browser aktualisieren ignoriert cookies vom adapter",
+        "ru": "обновление с браузером игнорирует файлы cookie от адаптера",
+        "pt": "atualizar com o navegador ignora cookies do adaptador",
+        "nl": "vernieuwen met browser negeert cookies van adapter",
+        "fr": "rafraîchir avec le navigateur ignore les cookies de l'adaptateur",
+        "it": "aggiornare con il browser ignora i cookie dall'adattatore",
+        "es": "refresco con el navegador ignora las cookies del adaptador",
+        "pl": "odświeżenie z przeglądarką ignoruje pliki cookie z adaptera",
+        "uk": "оновлення з браузером ігнорує файли cookie з адаптера",
+        "zh-cn": "用浏览器刷新忽略适配器的 cookie"
+      },
       "0.3.1": {
         "en": "improved logging during login.\nhandle situation where browser logs in with his cookie, so we only need to read the cookie.",
         "de": "verbessertes logging während des logins.\nkorrektes bearbeiten der situation, in der sich browser mit seinem cookie einloggt, wir müssen nur das cookie lesen.",
@@ -80,19 +93,6 @@
         "pl": "zapobiec logowaniu, jeśli nie jest ustawiona nazwa użytkownika i hasło\nbadania naprawcze",
         "uk": "заборонити логін, якщо не встановлено ім’я користувача та пароль\nфіксувати тести",
         "zh-cn": "如果没有设置用户名和密码, 请防止登录\n固定测试"
-      },
-      "0.0.2": {
-        "en": "store password encrypted",
-        "de": "speicher passwort verschlüsselt",
-        "ru": "зашифрованный пароль",
-        "pt": "guardar a senha encriptada",
-        "nl": "wachtwoord versleuteld opslaan",
-        "fr": "crypté du mot de passe de stockage",
-        "it": "negozio password crittografato",
-        "es": "almacenar contraseña cifrada",
-        "pl": "przechowywać zaszyfrowane hasło",
-        "uk": "зашифрований паролем",
-        "zh-cn": "存储加密密码"
       }
     },
     "titleLang": {
