@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "google-sharedlocations2",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "news": {
+      "0.3.1": {
+        "en": "improved logging during login.\nhandle situation where browser logs in with his cookie, so we only need to read the cookie.",
+        "de": "verbessertes logging während des logins.\nkorrektes bearbeiten der situation, in der sich browser mit seinem cookie einloggt, wir müssen nur das cookie lesen.",
+        "ru": "улучшенная регистрация во время входа.\nобрабатывать ситуацию, когда браузер входит в систему с его печеньем, поэтому нам нужно только прочитать печенье.",
+        "pt": "registro melhorado durante o login.\nlidar com a situação em que o navegador faz login com o seu cookie, então só precisamos ler o cookie.",
+        "nl": "verbeterde logging tijdens login.\nomgaan met de situatie waarin browser inlogt met zijn cookie, dus hoeven we alleen het cookie te lezen.",
+        "fr": "amélioration de l'enregistrement lors de la connexion.\ngérer la situation où le navigateur se connecte avec son cookie, donc nous avons seulement besoin de lire le cookie.",
+        "it": "migliorata registrazione durante il login.\ngestire la situazione in cui il browser accede con il suo cookie, quindi dobbiamo solo leggere il cookie.",
+        "es": "mejoró el registro durante el login.\nmanejar la situación donde el navegador entra con su cookie, así que sólo necesitamos leer la cookie.",
+        "pl": "poprawiła logowanie podczas logowania.\nzajmują się sytuacją, w której przeglądarka loguje się z jego ciasteczkiem, więc musimy tylko przeczytać ciasteczko.",
+        "uk": "вдосконалено журналювання під час входу.\nручна ситуація, коли журнали браузера у своєму файлі cookie, тому нам потрібно лише читати cookie.",
+        "zh-cn": "登录时改进了记录.\n处理浏览器登录他的饼干的情况 所以我们只需要读一下饼干."
+      },
       "0.3.0": {
         "en": "do not update states if no new position is available.\nfixed: refresh via browser\nadded: force refresh via browser by setting \"forceRefresh\" state to true\nchanged: now store complete cookies array",
         "de": "aktualisiere zustände nicht, wenn keine neue position verfügbar ist.\nrepariert: cookie refresh über browser\nneu: Refresh über Browser durch \"forceRefresh\" Zustand auf true setzen erzwingen\ngeändert: jetzt komplette cookies-array speichern",
@@ -80,19 +93,6 @@
         "pl": "przechowywać zaszyfrowane hasło",
         "uk": "зашифрований паролем",
         "zh-cn": "存储加密密码"
-      },
-      "0.0.1": {
-        "en": "initial release",
-        "de": "Erstveröffentlichung",
-        "ru": "Начальная версия",
-        "pt": "lançamento inicial",
-        "nl": "Eerste uitgave",
-        "fr": "Première version",
-        "it": "Versione iniziale",
-        "es": "Versión inicial",
-        "pl": "Pierwsze wydanie",
-        "uk": "Початкова версія",
-        "zh-cn": "首次出版"
       }
     },
     "titleLang": {
