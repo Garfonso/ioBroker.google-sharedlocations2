@@ -389,21 +389,27 @@ export class Cookie {
                 },
             );
 
-            this.log.debug('filling in username and clicking next.');
+            this.log.debug('filling in username.');
             await page.locator('#identifierId').fill(this.username);
             //is this enough, or do we need to search button in this div?
+            this.log.debug('clicking user next button.');
             await page.locator('#identifierNext').click();
             //waiting for #password fails in headles.. :-(
+            this.log.debug('waiting for network idle');
             await page.waitForNetworkIdle({ idleTime: 2000 });
 
-            this.log.debug('filling in password and clicking next.');
+            this.log.debug('filling in password.');
             //do we need to  wait until page is loaded / rendered here?
             await page.locator('input[type="password"]').fill(this.password);
             this.log.debug('clicking password next button.');
             await page.locator('#passwordNext').click();
             //await page.waitForNetworkIdle({ idleTime: 2000 }); -> does never happen in headless.. :-/
+            this.log.debug(
+                'waiting for page to load, currently waiting fixed 3 seconds, because network never gets idle?',
+            );
             await new Promise(resolve => setTimeout(resolve, 3000));
 
+            this.log.debug('navigating to google maps to load right cookies.');
             await page.goto('https://www.google.com/maps');
             this.log.debug('getting cookies.');
             await this.getCookiesFromPage(page);
