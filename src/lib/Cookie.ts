@@ -169,12 +169,15 @@ export class Cookie {
                 }
             }
 
+            // seems puppeteer sets expires to -1 if not present.
             this.cookies
-                .filter(c => c.expires && c.expires < Date.now() / 1000)
+                .filter(c => c.expires && c.expires > 0 && c.expires < Date.now() / 1000)
                 .forEach(c =>
-                    this.log.debug(`Cookie ${c.name} expired at ${new Date(c.expires! * 1000).toISOString()}`),
+                    this.log.debug(
+                        `Cookie ${c.name} expired at ${new Date(c.expires! * 1000).toISOString()} - ${c.expires}`,
+                    ),
                 );
-            this.cookies = this.cookies.filter(c => !c.expires || c.expires > Date.now() / 1000); //remove expired cookies
+            this.cookies = this.cookies.filter(c => !c.expires || c.expires < 0 || c.expires > Date.now() / 1000); //remove expired cookies
 
             this.log?.debug(`Cookie updated. Length: ${oldLength} -> ${this.cookies.length}`);
             return this.storeCookie();
