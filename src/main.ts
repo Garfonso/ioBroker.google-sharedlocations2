@@ -54,7 +54,7 @@ export class GoogleSharedlocations2 extends utils.Adapter {
         // Reset the connection indicator during startup
         await this.setState('info.connection', false, true);
         await this.cookie.init();
-        await this.subscribeStatesAsync('info.currentCookies');
+        await this.subscribeStatesAsync('info.*');
 
         //sanitize polling interval:
         this._pollInterval = this.config.pollInterval;
@@ -375,6 +375,13 @@ export class GoogleSharedlocations2 extends utils.Adapter {
             if (this.cookie.isValid()) {
                 await this.sendRequest();
             }
+        } else if (id.endsWith('info.forceRefreshWithBrowser') && state && !state.ack) {
+            this.log.info('Force refresh in browser state was triggered, trying to obtain new cookies.');
+            await this.cookie.refreshCookieWithBrowser();
+            if (this.cookie.isValid()) {
+                await this.sendRequest();
+            }
+            await this.setState('info.forceRefreshWithBrowser', false, true);
         }
     }
 

@@ -231,7 +231,7 @@ export class Cookie {
      *
      * @returns true if refresh was successful
      */
-    private async refreshCookie(): Promise<boolean> {
+    async refreshCookieWithBrowser(): Promise<boolean> {
         if (this.browser) {
             this.log.info('Seems we are already trying to log in. Aborting new login attempt.');
             return false;
@@ -244,32 +244,31 @@ export class Cookie {
             return false;
         }
 
-        const cookieArray = this.currentCookie
-            .split(';')
-            .map(pair => {
-                const parts = pair.trim().split('=');
-                return parts.length >= 2
-                    ? {
-                          name: parts[0].trim(),
-                          value: parts.slice(1).join('=').trim(),
-                          domain: '.google.com',
-                          path: '/',
-                          secure: true,
-                      }
-                    : null;
-            })
-            .filter(c => c !== null);
-        await page.setCookie(...cookieArray);
-
-        await page.goto('https://www.google.com/maps', { waitUntil: 'networkidle2', timeout: 60000 });
-        await new Promise(r => setTimeout(r, 5000));
+        const cookieArray = [...this.cookies];
+        // somehow we stored wrong cookies... :-/ Try to clean up here.
+        while (cookieArray.length > 0) {
+            try {
+                //await page.setCookie(...cookieArray);
+                await this.browser!.setCookie(...cookieArray);
+                break;
+            } catch (e) {
+                this.log.error(`Error setting cookies in browser: ${(e as Error).message}, trying again...`);
+                const cookie = cookieArray.pop(); //remove last cookie and try again, maybe some cookies are not valid for puppeteer or something.
+                console.log('Removed cookie:', cookie);
+            }
+        }
 
         try {
+            await page.goto('https://www.google.com/maps', { waitUntil: 'networkidle2', timeout: 60000 });
+            await new Promise(r => setTimeout(r, 5000));
+
             await this.sendRequest();
             await this.getCookiesFromPage(page);
             return true;
         } catch (e) {
-            this.log.error(`Error during cookie refresh: ${(e as Error).message}`);
+            this.log.error(
+                `Error during cookie refresh: ${(e as Error).message}, ${e instanceof Error ? e.stack : ''}`,
+            );
             return false;
         }
     }

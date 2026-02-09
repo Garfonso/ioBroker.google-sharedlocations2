@@ -240,6 +240,19 @@
       }
     },
     {
+      "_id": "info.forceRefreshWithBrowser",
+      "type": "state",
+      "common": {
+        "role": "button",
+        "name": "Start Browser to refresh cookies",
+        "desc": "Set to true to start the browser and refresh cookies using existing login in browser. Will reset to false automatically after starting the browser.",
+        "type": "boolean",
+        "read": false,
+        "write": true,
+        "def": false
+      }
+    },
+    {
       "_id": "fences",
       "type": "folder",
       "common": {
