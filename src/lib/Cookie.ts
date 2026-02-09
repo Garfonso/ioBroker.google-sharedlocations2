@@ -316,7 +316,7 @@ export class Cookie {
      *
      * @returns true if refresh was successful
      */
-    async refreshCookieWithBrowser(): Promise<boolean> {
+    async refreshCookieWithBrowser(withCookies: boolean = false): Promise<boolean> {
         if (this.browser) {
             this.log.info('Seems we are already trying to log in. Aborting new login attempt.');
             return false;
@@ -326,36 +326,52 @@ export class Cookie {
         const page = await this.startBrowser();
         if (!page) {
             this.log.error('Could not start browser for cookie refresh.');
+            await this.cleanUp();
             return false;
         }
 
-        const cookieArray = [...this.cookies];
-        // somehow we stored wrong cookies... :-/ Try to clean up here.
-        while (cookieArray.length > 0) {
-            try {
-                //await page.setCookie(...cookieArray);
-                await this.browser!.setCookie(...cookieArray);
-                break;
-            } catch (e) {
-                this.log.error(`Error setting cookies in browser: ${(e as Error).message}, trying again...`);
-                const cookie = cookieArray.pop(); //remove last cookie and try again, maybe some cookies are not valid for puppeteer or something.
-                console.log('Removed cookie:', cookie);
+        if (withCookies) {
+            const cookieArray = [...this.cookies];
+            // somehow we stored wrong cookies... :-/ Try to clean up here.
+            while (cookieArray.length > 0) {
+                try {
+                    //await page.setCookie(...cookieArray);
+                    await this.browser!.setCookie(...cookieArray);
+                    break;
+                } catch (e) {
+                    this.log.error(`Error setting cookies in browser: ${(e as Error).message}, trying again...`);
+                    const cookie = cookieArray.pop(); //remove last cookie and try again, maybe some cookies are not valid for puppeteer or something.
+                    console.log('Removed cookie:', cookie);
+                }
             }
         }
 
         try {
-            await page.goto('https://www.google.com/maps', { waitUntil: 'networkidle2', timeout: 60000 });
+            this.log.debug('Loading Google login page to refresh cookie.');
+            await page.goto(
+                'https://accounts.google.com/ServiceLogin?hl=de&continue=https://www.google.com/maps&gae=cb-eomtm',
+                { waitUntil: 'networkidle2', timeout: 60000 },
+            );
+            this.log.debug(
+                'Waiting for page to load, currently waiting fixed 5 seconds, because network never gets idle for maps',
+            );
             await new Promise(r => setTimeout(r, 5000));
-
-            await this.sendRequest();
-            await this.getCookiesFromPage(page);
-            return true;
+            if (!page.url().includes('accounts.google.com')) {
+                this.log.debug('Browser logged in, refreshing cookie.');
+                await this.getCookiesFromPage(page);
+                const results = await this.sendRequest();
+                if (results && results.length > 0) {
+                    await this.cleanUp();
+                    return true;
+                }
+            }
         } catch (e) {
             this.log.error(
                 `Error during cookie refresh: ${(e as Error).message}, ${e instanceof Error ? e.stack : ''}`,
             );
-            return false;
         }
+        await this.cleanUp();
+        return false;
     }
 
     /**
@@ -364,11 +380,16 @@ export class Cookie {
     async loginToGetNewCookies(): Promise<boolean> {
         let currentStep;
         try {
-            if (this.isValid()) {
+            // try to refresh cookie from browser session first:
+            let result = await this.refreshCookieWithBrowser();
+            if (result) {
+                this.log.info('Cookie refresh successful, no need to login again.');
+                return true;
+            } else if (this.isValid()) {
                 this.log.info('Current cookie seems valid, trying refresh.');
-                await this.refreshCookieWithBrowser();
-                if (this.isValid()) {
-                    this.log.info('Cookie refresh successful, no need to login again.');
+                result = await this.refreshCookieWithBrowser(true);
+                if (result) {
+                    this.log.info('Cookie refresh with existing cookies successful, no need to login again.');
                     return true;
                 }
             }
@@ -387,6 +408,7 @@ export class Cookie {
             const page = await this.startBrowser();
             if (!page) {
                 this.log.error('Could not start browser for login.');
+                await this.cleanUp();
                 return false;
             }
 
@@ -408,7 +430,13 @@ export class Cookie {
             if (!page.url().includes('accounts.google.com')) {
                 logDebug('Already logged in, refreshing cookie.');
                 await this.getCookiesFromPage(page);
-                return true;
+                await this.cleanUp();
+                const results = await this.sendRequest();
+                if (results && results.length > 0) {
+                    this.log.info('Login successful with existing session, no need to fill in credentials.');
+                    return true;
+                }
+                return false;
             }
 
             logDebug('filling in username.');
@@ -435,19 +463,18 @@ export class Cookie {
             await page.goto('https://www.google.com/maps');
             logDebug('getting cookies.');
             await this.getCookiesFromPage(page);
-            return true;
+            await this.cleanUp();
+            const results = await this.sendRequest();
+            if (results && results.length > 0) {
+                this.log.info('Login successful with existing session, no need to fill in credentials.');
+                return true;
+            }
+            return false;
         } catch (e) {
             this.log.error(`Error in puppeteer: ${(e as Error).message}`);
             this.log.error(`The step puppeteer failed was: ${currentStep}`);
             // try to close browser if open
-            if (this.browser) {
-                try {
-                    await this.browser.close();
-                } catch {
-                    /* ignore */
-                }
-            }
-            this.browser = null;
+            await this.cleanUp();
         }
         return false;
     }
@@ -456,9 +483,13 @@ export class Cookie {
      * Clean up on unload.
      */
     async cleanUp(): Promise<void> {
-        if (this.browser) {
-            await this.browser.close();
-            this.browser = null;
+        try {
+            if (this.browser) {
+                await this.browser.close();
+                this.browser = null;
+            }
+        } catch (e) {
+            this.log.error(`Error closing browser: ${(e as Error).message} - ${e instanceof Error ? e.stack : ''}`);
         }
     }
 
