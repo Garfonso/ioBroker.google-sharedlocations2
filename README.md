@@ -27,6 +27,10 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) improved logging during login.
+* (Garfonso) handle situation where browser logs in with his cookie, so we only need to read the cookie.
+
 ### 0.3.0 (2026-02-09)
 * (Garfonso) do not update states if no new position is available.
 * (Garfonso) fixed: refresh via browser
