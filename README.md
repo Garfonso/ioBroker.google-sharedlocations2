@@ -28,8 +28,8 @@ Copyright and trademark of Google are property of Google.
     ### **WORK IN PROGRESS**
 -->
 ### 0.2.0 (2026-02-03)
-* (Garfonso) now using data director to store chrome data
-* (Garfonso) try to use existint cookie in browser to refresh cookie without login.
+* (Garfonso) now using data directory to store chrome data
+* (Garfonso) try to use existing cookie in browser to refresh cookie without login.
 
 ### 0.1.1 (2026-02-02)
 * (Garfonso) improved recovery from login errors
