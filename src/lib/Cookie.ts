@@ -77,6 +77,11 @@ export class Cookie {
     async storeCookie(): Promise<void> {
         try {
             await this.adapter.setState('info.cookieStore', JSON.stringify(this.cookies), true);
+            await this.adapter.setState(
+                'info.currentCookies',
+                this.cookies.map(c => `${c.name}=${c.value}`).join('; '),
+                true,
+            );
         } catch (err: any) {
             this.log?.error(`Error storing cookie: ${err}`);
         }
@@ -103,6 +108,7 @@ export class Cookie {
                     : null;
             })
             .filter(c => c !== null);
+        this.log.debug(`Converted cookie string to ${this.cookies.length} cookies.`);
     }
 
     /**
@@ -292,7 +298,7 @@ export class Cookie {
 
         this.cookies = cookies.filter(c => c.domain.includes('google')); //only keep google cookies, maybe some other cookies are set during login which we do not want to store.
         await this.browser!.close();
-        if (this.isValid()) {
+        if (!this.isValid()) {
             this.log.warn('Cookie string seems too short, login probably failed!');
         } else {
             this.log.info(`Obtained new cookies from Google login with length ${this.cookies.length}.`);
@@ -353,6 +359,7 @@ export class Cookie {
      * Login to Google using puppeteer to get new cookies.
      */
     async loginToGetNewCookies(): Promise<boolean> {
+        let currentStep;
         try {
             if (this.isValid()) {
                 this.log.info('Current cookie seems valid, trying refresh.');
@@ -380,7 +387,11 @@ export class Cookie {
                 return false;
             }
 
-            this.log.debug('going to google login page.');
+            const logDebug = (msg: string): void => {
+                currentStep = msg;
+                this.log.debug(msg);
+            };
+            logDebug('going to google login page.');
             await page.goto(
                 'https://accounts.google.com/ServiceLogin?hl=de&continue=https://www.google.com/maps&gae=cb-eomtm',
                 {
@@ -389,33 +400,42 @@ export class Cookie {
                 },
             );
 
-            this.log.debug('filling in username.');
+            logDebug('waiting for login / maps page to load (fixed 3 seconds timeout)');
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            if (!page.url().includes('accounts.google.com')) {
+                logDebug('Already logged in, refreshing cookie.');
+                await this.getCookiesFromPage(page);
+                return true;
+            }
+
+            logDebug('filling in username.');
             await page.locator('#identifierId').fill(this.username);
             //is this enough, or do we need to search button in this div?
-            this.log.debug('clicking user next button.');
+            logDebug('clicking user next button.');
             await page.locator('#identifierNext').click();
             //waiting for #password fails in headles.. :-(
-            this.log.debug('waiting for network idle');
+            logDebug('waiting for network idle before filling password');
             await page.waitForNetworkIdle({ idleTime: 2000 });
 
-            this.log.debug('filling in password.');
+            logDebug('filling in password.');
             //do we need to  wait until page is loaded / rendered here?
             await page.locator('input[type="password"]').fill(this.password);
-            this.log.debug('clicking password next button.');
+            logDebug('clicking password next button.');
             await page.locator('#passwordNext').click();
             //await page.waitForNetworkIdle({ idleTime: 2000 }); -> does never happen in headless.. :-/
-            this.log.debug(
-                'waiting for page to load, currently waiting fixed 3 seconds, because network never gets idle?',
+            logDebug(
+                'waiting for page to load after password, currently waiting fixed 3 seconds, because network never gets idle?',
             );
             await new Promise(resolve => setTimeout(resolve, 3000));
 
-            this.log.debug('navigating to google maps to load right cookies.');
+            logDebug('navigating to google maps to load right cookies.');
             await page.goto('https://www.google.com/maps');
-            this.log.debug('getting cookies.');
+            logDebug('getting cookies.');
             await this.getCookiesFromPage(page);
             return true;
         } catch (e) {
             this.log.error(`Error in puppeteer: ${(e as Error).message}`);
+            this.log.error(`The step puppeteer failed was: ${currentStep}`);
             // try to close browser if open
             if (this.browser) {
                 try {
