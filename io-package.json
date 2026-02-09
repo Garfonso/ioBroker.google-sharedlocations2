@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "google-sharedlocations2",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "news": {
+      "0.3.0": {
+        "en": "do not update states if no new position is available.\nfixed: refresh via browser\nadded: force refresh via browser by setting \"forceRefresh\" state to true\nchanged: now store complete cookies array",
+        "de": "aktualisiere zustände nicht, wenn keine neue position verfügbar ist.\nrepariert: cookie refresh über browser\nneu: Refresh über Browser durch \"forceRefresh\" Zustand auf true setzen erzwingen\ngeändert: jetzt komplette cookies-array speichern",
+        "ru": "не обновляйте состояния, если нет новой позиции.\nобновление через браузер\nдобавлено: принудительное обновление через браузер, настроив состояние «forceRefresh» на истинное\nизменено: теперь храните полный массив cookie",
+        "pt": "não atualizar estados se nenhuma nova posição estiver disponível.\ncorrigido: atualizar via navegador\nadded: forçar a atualização via navegador definindo o estado \"forceRefresh\" para true\nalterado: agora armazenar o array completo de cookies",
+        "nl": "niet bijwerken indien er geen nieuwe positie beschikbaar is.\nvast: vernieuwen via browser\ntoegevoegd: force refresh via browser door \"forceRefresh\" in te stellen\ngewijzigd: nu volledige cookies-array opslaan",
+        "fr": "ne mettez pas à jour les états si aucun nouveau poste n'est disponible.\ncorrigé: rafraîchir via le navigateur\najouté: force rafraîchir via le navigateur en définissant l'état \"forceRefresh\" à true\nmodifié : stockez maintenant le tableau complet des cookies",
+        "it": "non aggiornare gli stati se non è disponibile nessuna nuova posizione.\nfisso: rinfrescare tramite browser\naggiunto: forza rinfresco tramite browser impostando lo stato \"forceRefresh\" a true\ncambiato: ora memorizzare l'array completo dei cookie",
+        "es": "no actualizar estados si no hay nueva posición disponible.\nfijo: refrescante a través del navegador\nañadido: actualización de fuerza a través del navegador mediante el establecimiento del estado \"forceRefresh\" a la verdad\ncambiado: ahora almacena la gama completa de cookies",
+        "pl": "nie aktualizować stanów, jeśli nie jest dostępna nowa pozycja.\nstałe: odświeżenie przez przeglądarkę\ndodane: siła odświeżania przez przeglądarkę poprzez ustawienie stanu \"forceRefresh\" na true\nzmienione: teraz przechowywać pełną tablicę cookies",
+        "uk": "не оновлювати стани, якщо немає нової позиції.\nвиправлено: оновлення через браузер\nдодано: сила освіження через браузер за допомогою налаштування \"forceRefresh\" стану true\nзмінено: тепер зберігає повний масив файлів cookie",
+        "zh-cn": "如果没有新职位,则不更新状态.\n固定: 通过浏览器刷新\n添加: 通过浏览器将“ ForceRefresh” 状态设置为真以强制刷新\n更改: 现在存储完整的 cookie 阵列"
+      },
       "0.2.0": {
         "en": "now using data directory to store chrome data\ntry to use existing cookie in browser to refresh cookie without login.",
         "de": "jetzt mit data directory, um chromdaten zu speichern\nversuchen, existierenden cookie im browser zu verwenden, um cookie ohne anmeldung zu aktualisieren.",
