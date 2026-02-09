@@ -27,6 +27,9 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) do not update states if no new position is available.
+
 ### 0.2.0 (2026-02-03)
 * (Garfonso) now using data directory to store chrome data
 * (Garfonso) try to use existing cookie in browser to refresh cookie without login.
