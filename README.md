@@ -29,6 +29,9 @@ Copyright and trademark of Google are property of Google.
 -->
 ### **WORK IN PROGRESS**
 * (Garfonso) do not update states if no new position is available.
+* (Garfonso) fixed: refresh via browser
+* (Garfonso) added: force refresh via browser by setting "forceRefresh" state to true
+* (Garfonso) changed: now store complete cookies array
 
 ### 0.2.0 (2026-02-03)
 * (Garfonso) now using data directory to store chrome data
