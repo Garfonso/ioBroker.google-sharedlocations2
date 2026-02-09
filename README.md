@@ -27,6 +27,9 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) refresh with browser ignores cookies from adapter
+
 ### 0.3.1 (2026-02-09)
 * (Garfonso) improved logging during login.
 * (Garfonso) handle situation where browser logs in with his cookie, so we only need to read the cookie.
