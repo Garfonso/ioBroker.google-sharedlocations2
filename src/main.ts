@@ -365,7 +365,7 @@ export class GoogleSharedlocations2 extends utils.Adapter {
                 this.log.info('Current cookies state was cleared, trying to obtain new cookies.');
                 this._successFullPolls = 0;
                 this.cookie.readCookieFromString(''); //clear old cookie
-                await this.cookie.loginToGetNewCookies();
+                await this.cookie.loginToGetNewCookies(true);
             } else {
                 this.log.info(
                     'Current cookies state was changed from outside the adapter, updating internal cookie store.',

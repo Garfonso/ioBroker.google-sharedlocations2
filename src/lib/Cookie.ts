@@ -314,6 +314,7 @@ export class Cookie {
     /**
      * Refresh the current cookie by using puppeteer to load Google Maps with existing cookie.
      *
+     * @param withCookies - if true, will try to set existing cookies in browser before loading page, default is false. This can help if cookies are still valid but not complete enough to work without browser session.
      * @returns true if refresh was successful
      */
     async refreshCookieWithBrowser(withCookies: boolean = false): Promise<boolean> {
@@ -376,21 +377,25 @@ export class Cookie {
 
     /**
      * Login to Google using puppeteer to get new cookies.
+     *
+     * @param forceLogin - if true, will try to login even if current cookie seems valid, default is false
      */
-    async loginToGetNewCookies(): Promise<boolean> {
+    async loginToGetNewCookies(forceLogin: boolean = false): Promise<boolean> {
         let currentStep;
         try {
             // try to refresh cookie from browser session first:
-            let result = await this.refreshCookieWithBrowser();
-            if (result) {
-                this.log.info('Cookie refresh successful, no need to login again.');
-                return true;
-            } else if (this.isValid()) {
-                this.log.info('Current cookie seems valid, trying refresh.');
-                result = await this.refreshCookieWithBrowser(true);
+            if (!forceLogin) {
+                let result = await this.refreshCookieWithBrowser();
                 if (result) {
-                    this.log.info('Cookie refresh with existing cookies successful, no need to login again.');
+                    this.log.info('Cookie refresh successful, no need to login again.');
                     return true;
+                } else if (this.isValid()) {
+                    this.log.info('Current cookie seems valid, trying refresh.');
+                    result = await this.refreshCookieWithBrowser(true);
+                    if (result) {
+                        this.log.info('Cookie refresh with existing cookies successful, no need to login again.');
+                        return true;
+                    }
                 }
             }
 
@@ -416,6 +421,13 @@ export class Cookie {
                 currentStep = msg;
                 this.log.debug(msg);
             };
+
+            if (forceLogin) {
+                logDebug('Force login enabled, clearing cookies and local storage.');
+                const cookies = await this.browser!.cookies();
+                await this.browser!.deleteCookie(...cookies);
+            }
+
             logDebug('going to google login page.');
             await page.goto(
                 'https://accounts.google.com/ServiceLogin?hl=de&continue=https://www.google.com/maps&gae=cb-eomtm',
