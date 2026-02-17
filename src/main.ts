@@ -141,6 +141,9 @@ export class GoogleSharedlocations2 extends utils.Adapter {
             await this.setState('info.connection', false, true);
             if (this._successFullPolls > 0) {
                 //try to get new cookie:
+                this.log.debug(
+                    `Polling failed, trying to obtain new cookies, because got ${this._successFullPolls} valid results before.`,
+                );
                 this._successFullPolls = 0;
                 await this.cookie.loginToGetNewCookies();
             }
