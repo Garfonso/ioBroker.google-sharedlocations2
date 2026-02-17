@@ -27,6 +27,9 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) if deleting cookies, also delete cookies in Browser to force login with username & password.
+
 ### 0.3.2 (2026-02-09)
 * (Garfonso) refresh with browser ignores cookies from adapter
 
