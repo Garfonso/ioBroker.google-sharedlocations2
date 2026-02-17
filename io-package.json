@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "google-sharedlocations2",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "news": {
+      "0.3.3": {
+        "en": "if deleting cookies, also delete cookies in Browser to force login with username & password.",
+        "de": "wenn Sie Cookies löschen, löschen Sie auch Cookies im Browser, um die Anmeldung mit Benutzername & Passwort zu zwingen.",
+        "ru": "при удалении файлов cookie также удаляйте файлы cookie в браузере, чтобы заставить войти в систему с именем пользователя и паролем.",
+        "pt": "se excluir cookies, também excluir cookies no Navegador para forçar login com nome de usuário e senha.",
+        "nl": "als u cookies verwijdert, verwijdert u ook cookies in de browser om inloggen met gebruikersnaam en wachtwoord te forceren.",
+        "fr": "si vous supprimez les cookies, supprimez également les cookies dans le navigateur pour forcer la connexion avec le nom d'utilisateur et le mot de passe.",
+        "it": "se la cancellazione dei cookie, anche eliminare i cookie in Browser per forzare il login con nome utente e password.",
+        "es": "si elimina las cookies, también eliminar las cookies en Browser para forzar el login con el nombre de usuario & contraseña.",
+        "pl": "jeśli usuniesz pliki cookie, usuń je również w przeglądarce, aby wymusić logowanie z nazwą użytkownika i hasłem.",
+        "uk": "якщо видаліть файли cookie, також видаліть файли cookie у браузері, щоб захистити логін з ім'ям користувача та паролем.",
+        "zh-cn": "如果删除 cookie, 也可以在浏览器中删除 cookie, 以强制用户名和密码登录 ."
+      },
       "0.3.2": {
         "en": "refresh with browser ignores cookies from adapter",
         "de": "mit browser aktualisieren ignoriert cookies vom adapter",
@@ -80,19 +93,6 @@
         "pl": "dodane: wsparcie dla miejsc\ndodane: wsparcie dla ogrodzeń\nspróbuj zapobiec logowaniu jak najwięcej.",
         "uk": "додано: підтримка місць\nдоданий: підтримка парканів\nнамагатися попередити логін якомога простіше.",
         "zh-cn": "添加:对位置的支持\n添加:支持围栏\n尽量防止登录."
-      },
-      "0.0.3": {
-        "en": "prevent login if no username and password is set\nfix tests",
-        "de": "verhindern login, wenn kein benutzername und passwort eingestellt ist\ntests repariert",
-        "ru": "предотвратить вход в систему, если имя пользователя и пароль не установлены\nисправление",
-        "pt": "impedir o login se nenhum nome de usuário e senha estiver definido\ncorrigir os testes",
-        "nl": "login voorkomen als er geen gebruikersnaam en wachtwoord is ingesteld\nvastleggen van tests",
-        "fr": "empêcher le login si aucun nom d'utilisateur et mot de passe n'est défini\nessais de correction",
-        "it": "impedire il login se non viene impostato nessun nome utente e password\ntest di correzione",
-        "es": "previene el inicio de sesión si no se establece el nombre de usuario y la contraseña\npruebas de reparación",
-        "pl": "zapobiec logowaniu, jeśli nie jest ustawiona nazwa użytkownika i hasło\nbadania naprawcze",
-        "uk": "заборонити логін, якщо не встановлено ім’я користувача та пароль\nфіксувати тести",
-        "zh-cn": "如果没有设置用户名和密码, 请防止登录\n固定测试"
       }
     },
     "titleLang": {
