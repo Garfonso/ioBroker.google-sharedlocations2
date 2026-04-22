@@ -13,7 +13,7 @@ updates:
     assignees:
       - "Garfonso"
     versioning-strategy: "increase"
-    cooldown: { default: 7 }
+    cooldown: { default-days: 7 }
 
   - package-ecosystem: "github-actions"
     directory: "/"
