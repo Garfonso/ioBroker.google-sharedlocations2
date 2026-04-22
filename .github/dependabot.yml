@@ -6,9 +6,8 @@ updates:
     directory: "/"
     schedule:
       interval: "cron"
-      day: 12
       timezone: "Europe/Berlin"
-      cronjob: "57 3 27 * *"
+      cronjob: "57 3 23 * *"
     open-pull-requests-limit: 15
     assignees:
       - "Garfonso"
@@ -19,9 +18,8 @@ updates:
     directory: "/"
     schedule:
       interval: "cron"
-      day: 12
       timezone: "Europe/Berlin"
-      cronjob: "57 3 27 * *"
+      cronjob: "57 3 23 * *"
     open-pull-requests-limit: 15
     assignees:
       - "Garfonso"
