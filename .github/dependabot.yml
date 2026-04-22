@@ -7,7 +7,7 @@ updates:
     schedule:
       interval: "cron"
       timezone: "Europe/Berlin"
-      cronjob: "57 3 23 * *"
+      cronjob: "57 3 27 * *"
     open-pull-requests-limit: 15
     assignees:
       - "Garfonso"
@@ -19,7 +19,7 @@ updates:
     schedule:
       interval: "cron"
       timezone: "Europe/Berlin"
-      cronjob: "57 3 23 * *"
+      cronjob: "57 3 27 * *"
     open-pull-requests-limit: 15
     assignees:
       - "Garfonso"
