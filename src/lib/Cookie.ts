@@ -462,8 +462,21 @@ export class Cookie {
                 return false;
             }
 
-            logDebug('filling in username.');
-            await page.locator('#identifierId').fill(this.username);
+            try {
+                logDebug('Trying to click on username, if user was logged in before.');
+                const userElement = await page.$(`[data-email="${this.username}"]`);
+                if (userElement) {
+                    await userElement.click();
+                } else {
+                    logDebug('No user element found, filling in username.');
+                    await page.locator('#identifierId').fill(this.username);
+                }
+            } catch (e: any) {
+                logDebug(`Ok, no user it seems (${e}). Let's fill in useranme`);
+                logDebug('filling in username.');
+                await page.locator('#identifierId').fill(this.username);
+            }
+
             //is this enough, or do we need to search button in this div?
             logDebug('clicking user next button.');
             await page.locator('#identifierNext').click();
