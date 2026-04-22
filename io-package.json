@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "google-sharedlocations2",
-    "version": "0.3.3",
+    "version": "0.3.4",
     "news": {
+      "0.3.4": {
+        "en": "replaced axios dependency. Tried to make login more robust.",
+        "de": "ersetzt axios Abhängigkeit. Versuchen Sie, die Anmeldung robuster zu machen.",
+        "ru": "замена аксиозависимости. Пытался сделать логин более надежным.",
+        "pt": "substituiu a dependência axios. Tentou tornar o login mais robusto.",
+        "nl": "axios afhankelijkheid vervangen. Probeerde om login robuuster te maken.",
+        "fr": "a remplacé la dépendance aux axios. J'ai essayé de rendre la connexion plus robuste.",
+        "it": "ha sostituito la dipendenza dagli assi. Ho cercato di rendere il login più robusto.",
+        "es": "sustituyó la dependencia de axios. Traté de hacer que el login sea más robusto.",
+        "pl": "zastąpił zależność aksjońską. Próbował uczynić logowanie bardziej solidnym.",
+        "uk": "замінена аксіос залежність. Виконується, щоб зробити логін більш надійним.",
+        "zh-cn": "取代对轴的依赖。 试图使登录更坚固."
+      },
       "0.3.3": {
         "en": "if deleting cookies, also delete cookies in Browser to force login with username & password.",
         "de": "wenn Sie Cookies löschen, löschen Sie auch Cookies im Browser, um die Anmeldung mit Benutzername & Passwort zu zwingen.",
@@ -80,19 +93,6 @@
         "pl": "poprawa odzyskiwania z błędów logowania",
         "uk": "поліпшення відновлення від помилок логіна",
         "zh-cn": "改进登录错误的恢复"
-      },
-      "0.1.0": {
-        "en": "added: support for places\nadded: support for fences\ntry to prevent login as much as possible.",
-        "de": "hinzugefügt: unterstützung für places\nhinzugefügt: unterstützung für fences\nversuche, die anmeldung so weit wie möglich zu verhindern.",
-        "ru": "добавлено: поддержка мест\nдобавлено: поддержка заборов\nстарайтесь максимально предотвратить вход.",
-        "pt": "adicionado: suporte para locais\nadicionado: suporte para cercas\ntentar evitar o login o máximo possível.",
-        "nl": "toegevoegd: ondersteuning voor plaatsen\ntoegevoegd: steun voor hekken\nproberen zo veel mogelijk inloggen te voorkomen.",
-        "fr": "ajouté: soutien aux places\najouté: soutien aux clôtures\nessayer d'éviter la connexion autant que possible.",
-        "it": "aggiunto: supporto per i luoghi\naggiunto: supporto per recinzioni\ncercare di impedire il login il più possibile.",
-        "es": "añadido: apoyo a los lugares\nañadido: soporte para vallas\ntratar de prevenir la entrada tanto como sea posible.",
-        "pl": "dodane: wsparcie dla miejsc\ndodane: wsparcie dla ogrodzeń\nspróbuj zapobiec logowaniu jak najwięcej.",
-        "uk": "додано: підтримка місць\nдоданий: підтримка парканів\nнамагатися попередити логін якомога простіше.",
-        "zh-cn": "添加:对位置的支持\n添加:支持围栏\n尽量防止登录."
       }
     },
     "titleLang": {
