@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "google-sharedlocations2",
-    "version": "0.3.4",
+    "version": "0.3.5",
     "news": {
+      "0.3.5": {
+        "en": "resize logo.",
+        "de": "größe des logos angepasst.",
+        "ru": "изменить размер логотипа.",
+        "pt": "redimensionar logo.",
+        "nl": "formaat wijzigen logo.",
+        "fr": "redimensionner le logo.",
+        "it": "ridimensiona il logo.",
+        "es": "resize logo.",
+        "pl": "logo zmiany rozmiaru.",
+        "uk": "змінити логотип.",
+        "zh-cn": "调整标志大小 ."
+      },
       "0.3.4": {
         "en": "replaced axios dependency. Tried to make login more robust.",
         "de": "ersetzt axios Abhängigkeit. Versuchen Sie, die Anmeldung robuster zu machen.",
@@ -80,19 +93,6 @@
         "pl": "teraz za pomocą dyrektora danych do przechowywania danych chromowych\nspróbuj użyć plików cookie existint w przeglądarce, aby odświeżyć pliki cookie bez logowania.",
         "uk": "тепер використовуючи каталог даних для зберігання хромованих даних\nспробуйте використовувати наявний cookie-файли в браузері, щоб оновити cookie без реєстрації.",
         "zh-cn": "现在使用数据总监存储铬数据\n尝试在浏览器中使用存在 cookie来刷新 cookie而不登录."
-      },
-      "0.1.1": {
-        "en": "improved recovery from login errors",
-        "de": "verbesserte wiederherstellung von login-fehlern",
-        "ru": "улучшенное восстановление после ошибок входа",
-        "pt": "recuperação melhorada de erros de login",
-        "nl": "verbeterd herstel van login fouten",
-        "fr": "amélioration de la récupération des erreurs de connexion",
-        "it": "miglioramento del recupero da errori di login",
-        "es": "mejor recuperación de errores de inicio de sesión",
-        "pl": "poprawa odzyskiwania z błędów logowania",
-        "uk": "поліпшення відновлення від помилок логіна",
-        "zh-cn": "改进登录错误的恢复"
       }
     },
     "titleLang": {
