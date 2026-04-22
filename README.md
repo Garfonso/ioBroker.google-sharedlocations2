@@ -27,6 +27,9 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) resize logo.
+
 ### 0.3.4 (2026-04-22)
 * (Garfonso) replaced axios dependency. Tried to make login more robust.
 
