@@ -1,8 +1,8 @@
-import axios from 'axios';
 import type { GoogleSharedlocations2 } from '../main';
 import puppeteer from 'puppeteer';
-import type { Browser, Page, CookieData } from 'puppeteer';
+import type { Browser, Page, CookieData, CookiePriority, CookieSameSite } from 'puppeteer';
 import { mkdir } from 'fs/promises';
+import type { RequestCredentials } from 'undici-types/fetch';
 
 /**
  * Helper class to manage Google cookies.
@@ -114,18 +114,24 @@ export class Cookie {
     /**
      * Augment the current cookie with data from the 'set-cookie' header.
      *
-     * @param headers - HTTP headers of axios response
+     * @param headersObj - HTTP headers of response
      */
-    async augmentCookieFromHeader(headers: Record<string, any>): Promise<void> {
-        if (headers['set-cookie'] && headers['set-cookie'].length) {
+    async augmentCookieFromHeader(headersObj: Headers): Promise<void> {
+        const headers = headersObj.getSetCookie();
+        if (headers.length > 0) {
             this.log?.debug('New header received.');
             const oldLength = this.cookies.length;
 
             //split old cookie and new cookie. Update single values.
-            for (const header of headers['set-cookie']) {
+            for (const header of headers) {
                 //console.log('Processing header cookie:', header);
                 const keyValues = header.split('; ');
-                const [name, value] = keyValues.shift().split('='); // first part is cookie, rest are attributes like path, secure etc.
+                const firstCookie = keyValues.shift();
+                if (firstCookie === undefined) {
+                    this.log.debug(`Invalid cookie header: ${header}`);
+                    continue;
+                }
+                const [name, value] = firstCookie.split('='); // first part is cookie, rest are attributes like path, secure etc.
                 const cookie = {
                     name: name.trim(),
                     value: value.trim(),
@@ -147,13 +153,13 @@ export class Cookie {
                             cookie.httpOnly = true;
                             break;
                         case 'samesite':
-                            cookie.sameSite = v ? v.trim() : 'Lax';
+                            cookie.sameSite = v ? (v.trim() as CookieSameSite) : 'Lax';
                             break;
                         case 'expires':
                             cookie.expires = new Date(v).getTime() / 1000; //puppeteer expects expires in seconds, not milliseconds
                             break;
                         case 'priority':
-                            cookie.priority = v ? v.trim() : 'Medium';
+                            cookie.priority = v ? (v.trim() as CookiePriority) : 'Medium';
                             break;
                         default:
                             this.log.debug(`Unknown cookie attribute: ${k}=${v}`);
@@ -189,8 +195,9 @@ export class Cookie {
      */
     async improveCookie(): Promise<boolean> {
         //see https://github.com/costastf/locationsharinglib/blob/master/locationsharinglib/locationsharinglib.py#L105
+        const url = 'https://myaccount.google.com/?hl=en';
         const options = {
-            url: 'https://myaccount.google.com/?hl=en',
+            credentials: 'same-origin' as RequestCredentials, //or do we need 'include' here?
             headers: {
                 Cookie: this.cookies.map(c => `${c.name}=${c.value}`).join('; '),
             },
@@ -198,7 +205,7 @@ export class Cookie {
         };
 
         try {
-            const response = await axios(options);
+            const response = await fetch(url, options);
 
             if (response.status !== 200) {
                 this.log?.error(`Failed improving cookie: ${response.status}`);
@@ -257,30 +264,33 @@ export class Cookie {
 
         //send request with current cookies
         this.log.debug('Sending request with current cookies');
+        const url =
+            'https://www.google.com/maps/rpc/locationsharing/read?authuser=2&hl=en&gl=us&pb=!1m7!8m6!1m3!1i14!2i8413!3i5385!2i6!3x4095!2m3!1e0!2sm!3i407105169!3m7!2sen!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!4e1!5m4!1e4!8m2!1e0!1e1!6m9!1e12!2i2!26m1!4b1!30m1!1f1.3953487873077393!39b1!44e1!50e0!23i4111425';
         const options = {
             method: 'GET',
-            url: 'https://www.google.com/maps/rpc/locationsharing/read',
+            credentials: 'same-origin' as RequestCredentials, //or do we need 'include' here?
             headers: {
                 Cookie: this.cookies.map(c => `${c.name}=${c.value}`).join('; '),
             },
-            params: {
+            /*params: {
                 authuser: 2,
                 hl: 'en',
                 gl: 'us',
                 //pb is place on map. Is irrelevant, set to google head quarters here.
                 pb: '!1m7!8m6!1m3!1i14!2i8413!3i5385!2i6!3x4095!2m3!1e0!2sm!3i407105169!3m7!2sen!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!4e1!5m4!1e4!8m2!1e0!1e1!6m9!1e12!2i2!26m1!4b1!30m1!1f1.3953487873077393!39b1!44e1!50e0!23i4111425',
-            },
+            },*/
         };
-
         try {
-            const response = await axios.request(options);
+            const response = await fetch(url, options);
             this.log.debug(`Request successful, response code: ${response.status}`);
-            const data = response.data.split('\n').slice(1).join('\n');
-            const locationData = JSON.parse(data);
-            const locations = locationData[0];
-            if (locations && locations.length > 0) {
-                await this.augmentCookieFromHeader(response.headers);
-                return locations;
+            if (response.ok) {
+                //const data = response.data.split('\n').slice(1).join('\n');
+                const locationData = (await response.json()) as Array<Array<any>>; //JSON.parse(data);
+                const locations = locationData[0];
+                if (locations && locations.length > 0) {
+                    await this.augmentCookieFromHeader(response.headers);
+                    return locations;
+                }
             }
             this.log.info('No shared locations found in the response, probably not logged in.');
         } catch (e) {
