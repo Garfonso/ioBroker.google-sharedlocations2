@@ -1,7 +1,7 @@
 import type { GoogleSharedlocations2 } from '../main';
 import puppeteer from 'puppeteer';
 import type { Browser, Page, CookieData, CookiePriority, CookieSameSite } from 'puppeteer';
-import { mkdir } from 'fs/promises';
+import { mkdir } from 'node:fs/promises';
 import type { RequestCredentials } from 'undici-types/fetch';
 
 /**
