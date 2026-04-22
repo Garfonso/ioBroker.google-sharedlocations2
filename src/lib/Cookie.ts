@@ -284,8 +284,9 @@ export class Cookie {
             const response = await fetch(url, options);
             this.log.debug(`Request successful, response code: ${response.status}`);
             if (response.ok) {
-                //const data = response.data.split('\n').slice(1).join('\n');
-                const locationData = (await response.json()) as Array<Array<any>>; //JSON.parse(data);
+                const dataBuffer = await response.text();
+                const data = dataBuffer.split('\n').slice(1).join('\n');
+                const locationData = JSON.parse(data);
                 const locations = locationData[0];
                 if (locations && locations.length > 0) {
                     await this.augmentCookieFromHeader(response.headers);
