@@ -459,58 +459,61 @@ export class Cookie {
                     this.log.info('Login successful with existing session, no need to fill in credentials.');
                     return true;
                 }
-                return false;
-            }
-
-            try {
-                logDebug('Trying to click on username, if user was logged in before.');
-                const userElement = await page.$(`[data-email="${this.username}"]`);
-                if (userElement) {
-                    await userElement.click();
-                } else {
-                    logDebug('No user element found, filling in username.');
+            } else {
+                try {
+                    logDebug('Trying to click on username, if user was logged in before.');
+                    const userElement = await page.$(`[data-email="${this.username}"]`);
+                    if (userElement) {
+                        await userElement.click();
+                    } else {
+                        logDebug('No user element found, filling in username.');
+                        await page.locator('#identifierId').fill(this.username);
+                    }
+                } catch (e: any) {
+                    logDebug(`Ok, no user it seems (${e}). Let's fill in useranme`);
+                    logDebug('filling in username.');
                     await page.locator('#identifierId').fill(this.username);
                 }
-            } catch (e: any) {
-                logDebug(`Ok, no user it seems (${e}). Let's fill in useranme`);
-                logDebug('filling in username.');
-                await page.locator('#identifierId').fill(this.username);
+
+                //is this enough, or do we need to search button in this div?
+                logDebug('clicking user next button.');
+                await page.locator('#identifierNext').click();
+                //waiting for #password fails in headles.. :-(
+                logDebug('waiting for network idle before filling password');
+                await page.waitForNetworkIdle({ idleTime: 2000 });
+
+                logDebug('filling in password.');
+                //do we need to  wait until page is loaded / rendered here?
+                await page.locator('input[type="password"]').fill(this.password);
+                logDebug('clicking password next button.');
+                await page.locator('#passwordNext').click();
+                //await page.waitForNetworkIdle({ idleTime: 2000 }); -> does never happen in headless.. :-/
+                logDebug(
+                    'waiting for page to load after password, currently waiting fixed 3 seconds, because network never gets idle?',
+                );
+                await new Promise(resolve => setTimeout(resolve, 3000));
+
+                logDebug('navigating to google maps to load right cookies.');
+                await page.goto('https://www.google.com/maps');
+                logDebug('getting cookies.');
+                await this.getCookiesFromPage(page);
+                await this.cleanUp();
+                const results = await this.sendRequest();
+                if (results && results.length > 0) {
+                    this.log.info('Login successful with existing session, no need to fill in credentials.');
+                    return true;
+                }
             }
-
-            //is this enough, or do we need to search button in this div?
-            logDebug('clicking user next button.');
-            await page.locator('#identifierNext').click();
-            //waiting for #password fails in headles.. :-(
-            logDebug('waiting for network idle before filling password');
-            await page.waitForNetworkIdle({ idleTime: 2000 });
-
-            logDebug('filling in password.');
-            //do we need to  wait until page is loaded / rendered here?
-            await page.locator('input[type="password"]').fill(this.password);
-            logDebug('clicking password next button.');
-            await page.locator('#passwordNext').click();
-            //await page.waitForNetworkIdle({ idleTime: 2000 }); -> does never happen in headless.. :-/
-            logDebug(
-                'waiting for page to load after password, currently waiting fixed 3 seconds, because network never gets idle?',
-            );
-            await new Promise(resolve => setTimeout(resolve, 3000));
-
-            logDebug('navigating to google maps to load right cookies.');
-            await page.goto('https://www.google.com/maps');
-            logDebug('getting cookies.');
-            await this.getCookiesFromPage(page);
-            await this.cleanUp();
-            const results = await this.sendRequest();
-            if (results && results.length > 0) {
-                this.log.info('Login successful with existing session, no need to fill in credentials.');
-                return true;
-            }
-            return false;
         } catch (e) {
             this.log.error(`Error in puppeteer: ${(e as Error).message}`);
             this.log.error(`The step puppeteer failed was: ${currentStep}`);
             // try to close browser if open
             await this.cleanUp();
+        }
+        // ok, somehow everything failed -> see if we can retry:
+        if (!forceLogin && this.username && this.password) {
+            this.log.info('Retrying to login with user & password.');
+            return this.loginToGetNewCookies(true);
         }
         return false;
     }
