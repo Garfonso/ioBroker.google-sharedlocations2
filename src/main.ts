@@ -23,6 +23,7 @@ export class GoogleSharedlocations2 extends utils.Adapter {
     _pollTimeout: ioBroker.Timeout | undefined;
     _pollInterval: number = 300;
     _successFullPolls: number = 1; // let us try a relogin at start, if cookie does not work.
+    _lastBrowserRefresh = 0;
     _users: Record<string, User> = {};
     fences: Fence[] = [];
     cookie: Cookie;
@@ -123,10 +124,12 @@ export class GoogleSharedlocations2 extends utils.Adapter {
                 this.log.debug('Polling positions with current cookies.');
                 const lastSuccessPolls = this._successFullPolls;
                 await this.sendRequest();
-                if (this._successFullPolls > 0 && lastSuccessPolls !== this._successFullPolls) {
-                    if (this._successFullPolls % 10 === 0) {
+                if (this._successFullPolls > 0 && lastSuccessPolls < this._successFullPolls) {
+                    if (Date.now() - this._lastBrowserRefresh > 24 * 60 * 60 * 1000) {
                         //try to get some more headers from google:
-                        await this.cookie.improveCookie();
+                        //await this.cookie.improveCookie(); -> somehow fails always..?? Don't understand, why.
+                        await this.cookie.refreshCookieWithBrowser();
+                        this._lastBrowserRefresh = Date.now();
                     }
                 }
             }
