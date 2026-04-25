@@ -27,7 +27,7 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.3.6 (2026-04-25)
 * (Garfonso) somehow the old improve cookie call does not work anymore (since switch to fetch). Don't see why. -> So we just run the browser once a day.
 * (Garfonso) Login with browser no tries to clear cookies in browser, if normal login does not work.
 
@@ -42,35 +42,6 @@ Copyright and trademark of Google are property of Google.
 
 ### 0.3.2 (2026-02-09)
 * (Garfonso) refresh with browser ignores cookies from adapter
-
-### 0.3.1 (2026-02-09)
-* (Garfonso) improved logging during login.
-* (Garfonso) handle situation where browser logs in with his cookie, so we only need to read the cookie.
-
-### 0.3.0 (2026-02-09)
-* (Garfonso) do not update states if no new position is available.
-* (Garfonso) fixed: refresh via browser
-* (Garfonso) added: force refresh via browser by setting "forceRefresh" state to true
-* (Garfonso) changed: now store complete cookies array
-
-### 0.2.0 (2026-02-03)
-* (Garfonso) now using data directory to store chrome data
-* (Garfonso) try to use existing cookie in browser to refresh cookie without login.
-
-### 0.1.1 (2026-02-02)
-* (Garfonso) improved recovery from login errors
-
-### 0.1.0 (2026-02-02)
-* (Garfonso) added: support for places
-* (Garfonso) added: support for fences
-* (Garfonso) try to prevent login as much as possible.
-
-### 0.0.3 (2026-01-28)
-* (Garfonso) prevent login if no username and password is set
-* (Garfonso) fix tests
-
-### 0.0.2 (2026-01-28)
-* (Garfonso) store password encrypted
 
 ## License
 MIT License
