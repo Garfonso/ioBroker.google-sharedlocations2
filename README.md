@@ -27,6 +27,10 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) somehow the old improve cookie call does not work anymore (since switch to fetch). Don't see why. -> So we just run the browser once a day.
+* 
+
 ### 0.3.5 (2026-04-22)
 * (Garfonso) resize logo.
 
