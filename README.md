@@ -29,7 +29,7 @@ Copyright and trademark of Google are property of Google.
 -->
 ### **WORK IN PROGRESS**
 * (Garfonso) somehow the old improve cookie call does not work anymore (since switch to fetch). Don't see why. -> So we just run the browser once a day.
-* 
+* (Garfonso) Login with browser no tries to clear cookies in browser, if normal login does not work.
 
 ### 0.3.5 (2026-04-22)
 * (Garfonso) resize logo.
