@@ -68,6 +68,7 @@ export class GoogleSharedlocations2 extends utils.Adapter {
         if (this._pollInterval > MAX_INT32) {
             this._pollInterval = MAX_INT32;
         }
+        this.log.info(`Working with pollInterval of ${this._pollInterval}s`);
 
         //read fences:
         for (const fenceConfig of this.config.fences || []) {
