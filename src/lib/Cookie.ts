@@ -167,10 +167,10 @@ export class Cookie {
                 }
                 const cIndex = this.cookies.findIndex(c => c.name === name);
                 if (cIndex < 0) {
-                    this.log.debug(`Adding new cookie from header: ${cookie.name}=${cookie.value}`);
+                    this.log.debug(`Adding new cookie from header: ${cookie.name}`);
                     this.cookies.push(cookie); //add
                 } else {
-                    this.log.debug(`Updating cookie from header: ${cookie.name}=${cookie.value}`);
+                    this.log.debug(`Updating cookie from header: ${cookie.name}`);
                     this.cookies[cIndex] = cookie; //update
                 }
             }
