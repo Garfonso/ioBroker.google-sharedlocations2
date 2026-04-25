@@ -204,10 +204,13 @@ export class Cookie {
         };
 
         try {
+            this.log.debug('Trying to improve cookie.');
             const response = await fetch(url, options);
 
             if (response.status !== 200) {
-                this.log?.error(`Failed improving cookie: ${response.status}`);
+                this.log?.error(`Failed improving cookie: ${response.status} - ${response.statusText}`);
+                console.log(response.headers);
+                console.log(await response.text());
                 return false;
             }
             await this.augmentCookieFromHeader(response.headers);
