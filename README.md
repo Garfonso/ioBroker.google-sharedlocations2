@@ -14,8 +14,21 @@
 
 Share your location with ioBroker via Google Maps. You should create a separate Google account for this purpose, i.e. an account for your ioBroker installation. Do NOT use your personal account.
 
-In config, enter the credentials of the Google account you created for ioBroker. Do **NOT** enter your **personal** account data. Then share your location from your mobile device (and account) with this account. The adapter will read the shared location and create states in ioBroker for each person sharing their location with the Google account.
+### Configuration
+
+In config, you can enter the credentials of the Google account you created for ioBroker and the adapter will do everything for you. Do **NOT** enter your **personal** account data.
+
+Then share your location from your mobile device (and account) with this iobroker-google-account. The adapter will read the shared location and create states in ioBroker for each person sharing their location with the Google account.
+
 You can configure the polling interval. But it will ignore values below 1 minute to avoid being blocked by Google.
+
+If you do not want to enter username & password, this is possible, read [below](#use-a-cookie).
+
+### Use a cookie
+Sometimes there are issues with login. Since the adapter just opens a browser and tries to login (but is more or less "blind", relies on information it already has), this can fail and there is not much I can do. Sometimes you might get a warning about a new login. Sometimes you will have to re-login with a second factor. If you run into such an issue copy a valid Cookie for google.com into the state `google-sharedlocations2.0.info.currentCookies` from a real browser. 
+
+You can even leave username & password empty in the configuration and then the adapter will try to keep that cookie working as good as possible (similar to my fork of the old google-sharedlocations-Adapter) without ever trying to login (but using the browser from time to time to load the whole page, seems to help with staying logged in). 
+
 
 This is not associated with Google in any way. Usage of this adapter might violate Google's Terms of Service. Use at your own risk.
 
