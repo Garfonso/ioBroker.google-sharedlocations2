@@ -56,6 +56,8 @@ Copyright and trademark of Google are property of Google.
 ### 0.3.2 (2026-02-09)
 * (Garfonso) refresh with browser ignores cookies from adapter
 
+[Older entries can be found in CHANGELOG_OLD.md](CHANGELOG_OLD.md)
+
 ## License
 MIT License
 

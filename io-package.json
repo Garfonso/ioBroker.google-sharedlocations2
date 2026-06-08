@@ -29,19 +29,6 @@
         "uk": "змінити логотип.",
         "zh-cn": "调整标志大小 ."
       },
-      "0.3.4": {
-        "en": "replaced axios dependency. Tried to make login more robust.",
-        "de": "ersetzt axios Abhängigkeit. Versuchen Sie, die Anmeldung robuster zu machen.",
-        "ru": "замена аксиозависимости. Пытался сделать логин более надежным.",
-        "pt": "substituiu a dependência axios. Tentou tornar o login mais robusto.",
-        "nl": "axios afhankelijkheid vervangen. Probeerde om login robuuster te maken.",
-        "fr": "a remplacé la dépendance aux axios. J'ai essayé de rendre la connexion plus robuste.",
-        "it": "ha sostituito la dipendenza dagli assi. Ho cercato di rendere il login più robusto.",
-        "es": "sustituyó la dependencia de axios. Traté de hacer que el login sea más robusto.",
-        "pl": "zastąpił zależność aksjońską. Próbował uczynić logowanie bardziej solidnym.",
-        "uk": "замінена аксіос залежність. Виконується, щоб зробити логін більш надійним.",
-        "zh-cn": "取代对轴的依赖。 试图使登录更坚固."
-      },
       "0.3.3": {
         "en": "if deleting cookies, also delete cookies in Browser to force login with username & password.",
         "de": "wenn Sie Cookies löschen, löschen Sie auch Cookies im Browser, um die Anmeldung mit Benutzername & Passwort zu zwingen.",
@@ -144,7 +131,7 @@
     "tier": 3,
     "mode": "daemon",
     "type": "geoposition",
-    "compact": true,
+    "compact": false,
     "connectionType": "cloud",
     "dataSource": "poll",
     "messagebox": true,
@@ -262,7 +249,7 @@
         "type": "object",
         "read": true,
         "write": false,
-        "def": "[]"
+        "def": null
       }
     },
     {
