@@ -370,7 +370,7 @@ export class Cookie {
             this.log.debug(
                 'Waiting for page to load, currently waiting fixed 5 seconds, because network never gets idle for maps',
             );
-            await new Promise(r => setTimeout(r, 5000));
+            await new Promise(r => this.adapter.setTimeout(() => r(undefined), 5000));
             if (!page.url().includes('accounts.google.com')) {
                 this.log.debug('Browser logged in, refreshing cookie.');
                 await this.getCookiesFromPage(page);
@@ -452,7 +452,7 @@ export class Cookie {
             );
 
             logDebug('waiting for login / maps page to load (fixed 3 seconds timeout)');
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            await new Promise(resolve => this.adapter.setTimeout(() => resolve(undefined), 3000));
             if (!page.url().includes('accounts.google.com')) {
                 logDebug('Already logged in, refreshing cookie.');
                 await this.getCookiesFromPage(page);
@@ -494,7 +494,7 @@ export class Cookie {
                 logDebug(
                     'waiting for page to load after password, currently waiting fixed 3 seconds, because network never gets idle?',
                 );
-                await new Promise(resolve => setTimeout(resolve, 3000));
+                await new Promise(resolve => this.adapter.setTimeout(() => resolve(undefined), 3000));
 
                 logDebug('navigating to google maps to load right cookies.');
                 await page.goto('https://www.google.com/maps');

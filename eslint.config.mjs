@@ -1,8 +1,8 @@
 // iobroker eslint configuration
-import iobrokerEslintConfig from '@iobroker/eslint-config/eslint.config.mjs';
+import config from '@iobroker/eslint-config';
 
 export default [
-    ...iobrokerEslintConfig,
+    ...config,
     {
         ignores: [
             '.dev-server/',

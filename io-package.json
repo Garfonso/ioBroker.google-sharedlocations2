@@ -144,7 +144,7 @@
     "tier": 3,
     "mode": "daemon",
     "type": "geoposition",
-    "compact": true,
+    "compact": false,
     "connectionType": "cloud",
     "dataSource": "poll",
     "messagebox": true,
@@ -259,7 +259,7 @@
         "role": "state",
         "name": "JSON cookie store with all data",
         "desc": "please don't mess up",
-        "type": "object",
+        "type": "array",
         "read": true,
         "write": false,
         "def": "[]"
