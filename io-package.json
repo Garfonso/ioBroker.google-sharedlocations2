@@ -246,10 +246,10 @@
         "role": "state",
         "name": "JSON cookie store with all data",
         "desc": "please don't mess up",
-        "type": "object",
+        "type": "array",
         "read": true,
         "write": false,
-        "def": null
+        "def": "[]"
       }
     },
     {
