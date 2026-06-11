@@ -250,7 +250,8 @@
         "read": false,
         "write": true,
         "def": ""
-      }
+      },
+      "native": {}
     },
     {
       "_id": "info.cookieStore",
@@ -263,7 +264,8 @@
         "read": true,
         "write": false,
         "def": "[]"
-      }
+      },
+      "native": {}
     },
     {
       "_id": "info.forceRefreshWithBrowser",
@@ -276,7 +278,8 @@
         "read": false,
         "write": true,
         "def": false
-      }
+      },
+      "native": {}
     },
     {
       "_id": "fences",
