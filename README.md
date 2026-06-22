@@ -41,6 +41,7 @@ Copyright and trademark of Google are property of Google.
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (ioBroker-Bot) Adapter requires admin >= 7.8.23 now.
 * (Garfonso) minor fixes and improvements.
 
 ### 0.3.6 (2026-04-25)
@@ -60,6 +61,8 @@ Copyright and trademark of Google are property of Google.
 * (Garfonso) refresh with browser ignores cookies from adapter
 
 [Older entries can be found in CHANGELOG_OLD.md](CHANGELOG_OLD.md)
+
+[Older changelogs can be found there](CHANGELOG_OLD.md)
 
 ## License
 MIT License
