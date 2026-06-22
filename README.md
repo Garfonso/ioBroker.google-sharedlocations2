@@ -41,6 +41,7 @@ Copyright and trademark of Google are property of Google.
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (ioBroker-Bot) Adapter requires admin >= 7.8.23 now.
 * (Garfonso) minor fixes and improvements.
 
 ### 0.3.6 (2026-04-25)
