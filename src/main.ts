@@ -14,7 +14,7 @@ import { Cookie } from './lib/Cookie';
 const MAX_INT32 = 2 ** 31 - 1; // 2147483647 (hex 0x7FFFFFFF)
 
 // Load your modules here, e.g.:
-// import * as fs from 'fs';
+// import * as fs from 'node:fs';
 
 /**
  * The adapter class
