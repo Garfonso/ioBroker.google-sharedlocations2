@@ -47,13 +47,14 @@
     "files": [
         "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).{json,json5}",
         "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
-        "src/",
+        "src/**/!(*.test).ts",
         "www/",
         "io-package.json",
         "LICENSE"
     ],
     "scripts": {
         "check": "tsc --noEmit",
+        "check:test": "tsc --noEmit -p tsconfig.test.json",
         "test:ts": "mocha --config test/mocharc.custom.json src/**/*.test.ts",
         "test:package": "mocha test/package --exit",
         "test:integration": "mocha test/integration --exit",
@@ -61,7 +62,8 @@
         "translate": "translate-adapter",
         "release": "release-script",
         "dev-server": "dev-server",
-        "lint": "eslint -c eslint.config.mjs src/"
+        "lint": "eslint -c eslint.config.mjs src/",
+        "lint:fix": "eslint -c eslint.config.mjs src/ --fix"
     },
     "bugs": {
         "url": "https://github.com/Garfonso/ioBroker.google-sharedlocations2/issues"

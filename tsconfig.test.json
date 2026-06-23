@@ -1,0 +1,16 @@
+// tsconfig for type-checking test files only.
+// Adds the mocha/chai ambient globals that the production tsconfig deliberately omits.
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "types": ["node", "mocha", "chai"]
+    },
+    "include": [
+        "src/**/*.test.ts",
+        "test/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules/**",
+        "widgets/**"
+    ]
+}

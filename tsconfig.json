@@ -35,11 +35,12 @@
         "inlineSourceMap": false
     },
     "include": [
-        "src/**/*.ts",
-        "test/**/*.ts"
+        "src/**/*.ts"
     ],
     "exclude": [
         "node_modules/**",
-        "widgets/**"
+        "widgets/**",
+        "src/**/*.test.ts",
+        "test/**/*.ts"
     ]
 }
