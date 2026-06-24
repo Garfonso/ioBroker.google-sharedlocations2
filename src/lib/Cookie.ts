@@ -1,8 +1,13 @@
 import type { GoogleSharedlocations2 } from '../main';
 import puppeteer from 'puppeteer';
 import type { Browser, Page, CookieData, CookiePriority, CookieSameSite } from 'puppeteer';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import * as path from 'node:path';
 import type { RequestCredentials } from 'undici-types/fetch';
+
+const execFileAsync = promisify(execFile);
 
 /**
  * Helper class to manage Google cookies.
@@ -14,6 +19,7 @@ export class Cookie {
     adapter: GoogleSharedlocations2;
     log;
     private browser: Browser | null = null;
+    private browserInstallTried = false;
     dataDir: string;
 
     /**
@@ -233,24 +239,69 @@ export class Cookie {
             return;
         }
         this.log.debug('Starting browser.');
-        this.browser = await puppeteer.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled'],
-            ignoreDefaultArgs: ['--enable-automation'], //h// ide automation flag, did not help.
-            userDataDir: this.dataDir,
-        });
-        this.log.debug('browser started, opening new page.');
-        const page = await this.browser.newPage();
-        //hide puppeteer automation flag
-        await page.evaluateOnNewDocument(() => {
-            Object.defineProperty(navigator, 'webdriver', { get: () => false });
-        });
-        await page.setUserAgent({
-            userAgent:
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36',
-        });
+        try {
+            this.browser = await puppeteer.launch({
+                headless: true,
+                args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled'],
+                ignoreDefaultArgs: ['--enable-automation'], //h// ide automation flag, did not help.
+                userDataDir: this.dataDir,
+            });
+            this.log.debug('browser started, opening new page.');
+            const page = await this.browser.newPage();
+            //hide puppeteer automation flag
+            await page.evaluateOnNewDocument(() => {
+                Object.defineProperty(navigator, 'webdriver', { get: () => false });
+            });
+            await page.setUserAgent({
+                userAgent:
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36',
+            });
 
-        return page;
+            return page;
+        } catch (e) {
+            // Browser could not be started (e.g. Chrome binary or system libs missing). Do not crash the adapter,
+            // just skip the browser based cookie refresh and keep polling with the existing cookies.
+            const message = (e as Error).message;
+            this.log.error(`Could not launch browser: ${message}`);
+            try {
+                await this.browser?.close();
+            } catch {
+                /* ignore */
+            }
+            this.browser = null;
+            // The Chrome binary is missing (typically after a puppeteer upgrade that needs a newer Chrome).
+            // Try to download the matching Chrome once and retry, so the adapter self-heals without manual steps.
+            if (/Could not find Chrome/i.test(message) && !this.browserInstallTried) {
+                this.browserInstallTried = true;
+                if (await this.installBrowser()) {
+                    return this.startBrowser();
+                }
+            }
+            return undefined;
+        }
+    }
+
+    /**
+     * Download the Chrome build that the installed puppeteer version expects, using puppeteer's own CLI so the
+     * version always matches. Used as a self-heal when launching the browser failed because Chrome is missing.
+     *
+     * @returns true if the install command finished without error
+     */
+    private async installBrowser(): Promise<boolean> {
+        try {
+            this.log.info('Chrome is missing, trying to download the matching version. This can take a while...');
+            // Resolve puppeteer's CLI from the installed package so the downloaded Chrome matches this puppeteer version.
+            const pkgPath = require.resolve('puppeteer/package.json');
+            const bin = JSON.parse(await readFile(pkgPath, 'utf8')).bin;
+            const binRel = typeof bin === 'string' ? bin : bin.puppeteer;
+            const cliPath = path.join(path.dirname(pkgPath), binRel);
+            const { stdout } = await execFileAsync(process.execPath, [cliPath, 'browsers', 'install', 'chrome']);
+            this.log.info(`Chrome download finished: ${stdout.trim()}`);
+            return true;
+        } catch (e) {
+            this.log.error(`Could not download Chrome: ${(e as Error).message}`);
+            return false;
+        }
     }
 
     /**
