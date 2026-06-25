@@ -43,6 +43,7 @@ Copyright and trademark of Google are property of Google.
 ### **WORK IN PROGRESS**
 - (ioBroker-Bot) Adapter requires admin >= 7.8.23 now.
 * (Garfonso) minor fixes and improvements.
+* (Garfonso/Claude) added self heal if wrong chrome version is installed (e.g. after update of puppeteer).
 
 ### 0.3.6 (2026-04-25)
 * (Garfonso) somehow the old improve cookie call does not work anymore (since switch to fetch). Don't see why. -> So we just run the browser once a day.
