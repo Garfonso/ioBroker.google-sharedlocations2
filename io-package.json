@@ -6,15 +6,15 @@
       "0.3.6": {
         "en": "somehow the old improve cookie call does not work anymore (since switch to fetch). Don't see why. -> So we just run the browser once a day.\nLogin with browser now tries to clear cookies in browser, if normal login does not work.",
         "de": "irgendwie funktioniert der alte Cookie-Verbessern-Aufruf nicht mehr (seit Umschalten auf Fetch). Ich sehen nicht, warum. -> Also starten wir den Browser einmal am Tag.\nEinloggen mit Browser versucht jetzt, Cookies im Browser zu löschen, wenn normale Anmeldung nicht funktioniert.",
-        "ru": "как-то старый улучшенный вызов куки больше не работает (поскольку переключается на извлечение). Не понимаю почему. -> Поэтому мы просто запускаем браузер один раз в день.\nЛогин с браузером не пытается очистить файлы cookie в браузере, если обычный логин не работает.",
-        "pt": "de alguma forma o velho melhorar chamada de cookies não funciona mais (desde switch to fetch). Não vejo porquê. -> Então, nós apenas dirigimos o navegador uma vez por dia.\nLogin com o navegador não tenta limpar cookies no navegador, se o login normal não funcionar.",
-        "nl": "op de een of andere manier werkt de oude verbetering cookie call niet meer (sinds switch to fetch). Ik zie niet in waarom. -> Dus we doen de browser één keer per dag.\nInloggen met browser niet probeert te wissen cookies in de browser, als de normale login niet werkt.",
-        "fr": "d'une certaine façon, l'ancien appel à cookies d'amélioration ne fonctionne plus (depuis le commutateur pour récupérer). Je ne vois pas pourquoi. -> Donc, on fait fonctionner le navigateur une fois par jour.\nSe connecter avec le navigateur ne tente pas d'effacer les cookies dans le navigateur, si la connexion normale ne fonctionne pas.",
-        "it": "in qualche modo il vecchio migliorare la chiamata dei cookie non funziona più (dal momento che l'interruttore a prendere). Non capisco perche'. - > Quindi facciamo funzionare il browser una volta al giorno.\nAccedi con il browser non cerca di cancellare i cookie nel browser, se il normale login non funziona.",
-        "es": "de alguna manera la vieja mejora de la llamada de cookies ya no funciona (después de cambiar a buscar). No veo por qué. - No. Así que sólo corremos el navegador una vez al día.\nIniciar sesión con el navegador no intenta limpiar las cookies en el navegador, si el login normal no funciona.",
-        "pl": "jakoś stare ulepszenie cookies połączenia nie działa już (od przełącznika do pobierania). Nie widzę powodu. - > Więc po prostu sprawdzamy przeglądarkę raz dziennie.\nZaloguj się z przeglądarką bez próby wyczyszczenia plików cookie w przeglądarce, jeśli normalne logowanie nie działa.",
-        "uk": "якось старий поліпшення cookie-зв'язку не працює більше (з перемикачем на fetch). Не бачте, чому. до Так ми просто запускаємо браузер один раз на добу.\nВвійти з браузером не намагається очистити файли cookie в браузері, якщо звичайний логін не працює.",
-        "zh-cn": "不知何故,旧的改进饼干呼叫已不再可行(因为切换到接取). 无明故. - > 开口 所以我们只是每天运行浏览器一次.\n在浏览器中登录不尝试清除 cookie, 如果正常的登录无效 ."
+        "ru": "как-то старый улучшенный вызов куки больше не работает (поскольку переключается на извлечение). Не понимаю почему. -> Поэтому мы просто запускаем браузер один раз в день.\nВход через браузер теперь пытается очистить файлы cookie в браузере, если обычный вход не работает.",
+        "pt": "de alguma forma o velho melhorar chamada de cookies não funciona mais (desde switch to fetch). Não vejo porquê. -> Então, nós apenas dirigimos o navegador uma vez por dia.\nO login com o navegador agora tenta limpar os cookies no navegador, se o login normal não funcionar.",
+        "nl": "op de een of andere manier werkt de oude verbetering cookie call niet meer (sinds switch to fetch). Ik zie niet in waarom. -> Dus we doen de browser één keer per dag.\nInloggen met browser probeert nu de cookies in de browser te wissen, als de normale login niet werkt.",
+        "fr": "d'une certaine façon, l'ancien appel à cookies d'amélioration ne fonctionne plus (depuis le commutateur pour récupérer). Je ne vois pas pourquoi. -> Donc, on fait fonctionner le navigateur une fois par jour.\nSe connecter avec le navigateur tente maintenant d'effacer les cookies dans le navigateur, si la connexion normale ne fonctionne pas.",
+        "it": "in qualche modo il vecchio migliorare la chiamata dei cookie non funziona più (dal momento che l'interruttore a prendere). Non capisco perche'. - > Quindi facciamo funzionare il browser una volta al giorno.\nL'accesso con il browser ora cerca di cancellare i cookie nel browser, se il login normale non funziona.",
+        "es": "de alguna manera la vieja mejora de la llamada de cookies ya no funciona (después de cambiar a buscar). No veo por qué. - No. Así que sólo corremos el navegador una vez al día.\nIniciar sesión con el navegador ahora intenta limpiar las cookies en el navegador, si el login normal no funciona.",
+        "pl": "jakoś stare ulepszenie cookies połączenia nie działa już (od przełącznika do pobierania). Nie widzę powodu. - > Więc po prostu sprawdzamy przeglądarkę raz dziennie.\nLogowanie za pomocą przeglądarki próbuje teraz wyczyścić pliki cookie w przeglądarce, jeśli normalne logowanie nie działa.",
+        "uk": "якось старий поліпшення cookie-зв'язку не працює більше (з перемикачем на fetch). Не бачте, чому. до Так ми просто запускаємо браузер один раз на добу.\nВхід через браузер тепер намагається очистити файли cookie у браузері, якщо звичайний вхід не працює.",
+        "zh-cn": "不知何故,旧的改进饼干呼叫已不再可行(因为切换到接取). 无明故. - > 开口 所以我们只是每天运行浏览器一次.\n现在浏览器登录会尝试清除浏览器中的 cookie，如果正常登录无效。"
       },
       "0.3.5": {
         "en": "resize logo.",
@@ -24,7 +24,7 @@
         "nl": "formaat wijzigen logo.",
         "fr": "redimensionner le logo.",
         "it": "ridimensiona il logo.",
-        "es": "resize logo.",
+        "es": "cambiar el tamaño del logo.",
         "pl": "logo zmiany rozmiaru.",
         "uk": "змінити логотип.",
         "zh-cn": "调整标志大小 ."
@@ -105,7 +105,7 @@
       "it": "Posizioni condivise di Google 2",
       "es": "Ubicaciones compartidas de Google 2",
       "pl": "Udostępnione lokalizacje Google 2",
-      "uk": "Google Shared Locations 2",
+      "uk": "Google Спільні місцезнаходження 2",
       "zh-cn": "Google 共享位置 2"
     },
     "desc": {
