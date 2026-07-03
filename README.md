@@ -40,7 +40,7 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.4.0 (2026-07-03)
 - (ioBroker-Bot) Adapter requires admin >= 7.8.23 now.
 * (Garfonso) minor fixes and improvements.
 * (Garfonso/Claude) added self heal if wrong chrome version is installed (e.g. after update of puppeteer).
@@ -57,11 +57,6 @@ Copyright and trademark of Google are property of Google.
 
 ### 0.3.3 (2026-02-17)
 * (Garfonso) if deleting cookies, also delete cookies in Browser to force login with username & password.
-
-### 0.3.2 (2026-02-09)
-* (Garfonso) refresh with browser ignores cookies from adapter
-
-[Older entries can be found in CHANGELOG_OLD.md](CHANGELOG_OLD.md)
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

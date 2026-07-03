@@ -1,4 +1,9 @@
 # Older Changes
+## 0.3.2 (2026-02-09)
+* (Garfonso) refresh with browser ignores cookies from adapter
+
+[Older entries can be found in CHANGELOG_OLD.md](CHANGELOG_OLD.md)
+
 ## 0.3.1 (2026-02-09)
 * (Garfonso) improved logging during login.
 * (Garfonso) handle situation where browser logs in with his cookie, so we only need to read the cookie.
