@@ -25,7 +25,7 @@
     "node": ">= 22.12"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.4.1",
+    "@iobroker/adapter-core": "^3.4.3",
     "puppeteer": "^25.2.0"
   },
   "devDependencies": {
