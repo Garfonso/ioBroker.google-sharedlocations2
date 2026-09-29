@@ -68,5 +68,8 @@
   "bugs": {
     "url": "https://github.com/Garfonso/ioBroker.google-sharedlocations2/issues"
   },
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "allowScripts": {
+    "puppeteer@25.12.0": true
+  }
 }
