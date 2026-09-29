@@ -43,6 +43,7 @@ Copyright and trademark of Google are property of Google.
 ### **WORK IN PROGRESS**
 * (Garfonso/Claude) added settings for how long to wait for a Google login confirmation and for remote debugging of the login browser.
 * (Garfonso/Claude) fixed several issues in the login: only google cookies are stored again, the faked user agent now matches the Chrome that is really used and login pages are no longer dumped to the console.
+* (Garfonso/Claude) updated puppeteer and test dependencies.
 
 ### 0.4.0 (2026-07-03)
 - (ioBroker-Bot) Adapter requires admin >= 7.8.23 now.

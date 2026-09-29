@@ -34,6 +34,19 @@
         "sourceMap": true,
         "inlineSourceMap": false
     },
+    // ts-node runs the mocha tests. Those need the mocha/chai globals, which the production config above
+    // deliberately leaves out. Plain tsc ignores this section, so "npm run check" stays free of test types.
+    "ts-node": {
+        "compilerOptions": {
+            // TypeScript 6 wants an explicit rootDir as soon as something is emitted (ts-node does, tsc --noEmit does not)
+            "rootDir": ".",
+            "types": [
+                "node",
+                "mocha",
+                "chai"
+            ]
+        }
+    },
     "include": [
         "src/**/*.ts"
     ],
