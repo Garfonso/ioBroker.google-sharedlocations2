@@ -7,6 +7,9 @@ declare global {
             googleUsername: string;
             googlePassword: string;
             pollInterval: number;
+            challengeTimeout: number;
+            remoteDebugging: boolean;
+            remoteDebuggingPort: number;
             placesInstance: string;
             fences: Array<{
                 name: string;

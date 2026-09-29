@@ -13,5 +13,11 @@
     "Longitude": "Longitude",
     "Radius (m)": "Radius (m)",
     "User": "User",
-    "ID of state": "ID of state"
+    "ID of state": "ID of state",
+    "Login Settings": "Login Settings",
+    "labelChallengeHint": "If Google asks for an additional confirmation during login (2FA, \"Is this you?\", \"Choose the number shown\"), the adapter keeps the invisible browser open for this long. The number you have to pick on your phone is published in the state info.loginPageText, a screenshot of the browser in info.loginScreenshot.",
+    "Wait for confirmation (in seconds, 0 disables waiting)": "Wait for confirmation (in seconds, 0 disables waiting)",
+    "labelRemoteDebuggingHint": "Only needed for troubleshooting: opens a Chrome DevTools debugging port for the login browser, so you can watch and control it. The port is bound to localhost only - reach it through an SSH tunnel, for example \"ssh -L 9222:localhost:9222 user@iobroker-host\", then open http://localhost:9222 in Chrome. Anyone who can reach this port can control the browser and read the Google session, so keep it switched off during normal operation.",
+    "Enable remote debugging of the login browser": "Enable remote debugging of the login browser",
+    "Remote debugging port (localhost only)": "Remote debugging port (localhost only)"
 }

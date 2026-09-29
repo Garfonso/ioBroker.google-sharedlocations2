@@ -1,17 +1,23 @@
 {
+    "Enable remote debugging of the login browser": "启用登录浏览器的远程调试",
     "Fences, will create boolean states for each fence to indicate if user is within the fence": "栅栏，将为每个栅栏创建布尔状态以指示用户是否在栅栏内",
     "Geofencing Settings": "地理围栏设置",
     "Google Settings": "谷歌设置",
     "ID of state": "州ID",
     "Instance of iobroker.places to use": "要使用的 iobroker.places 实例",
     "Latitude": "纬度",
+    "Login Settings": "登录设置",
     "Longitude": "经度",
     "Name of fence": "围栏名称",
     "Password of ioBroker Google Account": "ioBroker Google 账户密码",
     "Polling Interval (in seconds, at least 60 seconds)": "轮询间隔（以秒为单位，至少 60 秒）",
     "Radius (m)": "半径（米）",
+    "Remote debugging port (localhost only)": "远程调试端口（仅 localhost）",
     "User": "用户",
     "Username of ioBroker Google Account": "ioBroker Google 帐户的用户名",
+    "Wait for confirmation (in seconds, 0 disables waiting)": "等待确认（秒，0 表示不等待）",
     "google-sharedlocations2 adapter settings": "google-sharedlocations2的适配器设置",
-    "labelAccountHint": "请提供您使用 Google 地图应用程序共享您的位置的 ioBroker Google 帐户的凭据。强烈建议为此目的创建一个专用的 Google 帐户。"
+    "labelAccountHint": "请提供您使用 Google 地图应用程序共享您的位置的 ioBroker Google 帐户的凭据。强烈建议为此目的创建一个专用的 Google 帐户。",
+    "labelChallengeHint": "如果 Google 在登录时要求额外确认（两步验证、“是你吗？”、“选择显示的数字”），适配器会让不可见的浏览器保持打开这么长时间。需要在手机上选择的数字会发布到状态 info.loginPageText，浏览器截图发布到 info.loginScreenshot。",
+    "labelRemoteDebuggingHint": "仅用于排查问题：为登录浏览器打开一个 Chrome DevTools 调试端口，以便观察和控制它。该端口仅绑定到 localhost — 请通过 SSH 隧道访问，例如 \"ssh -L 9222:localhost:9222 用户@iobroker主机\"，然后在 Chrome 中打开 http://localhost:9222。任何能访问该端口的人都可以控制浏览器并读取 Google 会话，因此正常运行时请保持关闭。"
 }

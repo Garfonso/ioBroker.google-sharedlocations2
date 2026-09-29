@@ -207,6 +207,9 @@
     "googleUsername": "",
     "googlePassword": "",
     "pollInterval": 60,
+    "challengeTimeout": 120,
+    "remoteDebugging": false,
+    "remoteDebuggingPort": 9222,
     "placesInstance": "",
     "fences": []
   },

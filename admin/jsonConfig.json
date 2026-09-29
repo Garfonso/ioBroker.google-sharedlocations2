@@ -53,6 +53,71 @@
                 }
             }
         },
+        "_LoginSettings": {
+            "type": "panel",
+            "label": "Login Settings",
+            "items": {
+                "_challengeHint": {
+                    "type": "staticText",
+                    "label": "labelChallengeHint",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
+                "challengeTimeout": {
+                    "type": "number",
+                    "label": "Wait for confirmation (in seconds, 0 disables waiting)",
+                    "default": 120,
+                    "unit": "s",
+                    "min": 0,
+                    "max": 900,
+                    "step": 10,
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
+                },
+                "_remoteDebuggingHint": {
+                    "type": "staticText",
+                    "label": "labelRemoteDebuggingHint",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
+                "remoteDebugging": {
+                    "type": "checkbox",
+                    "label": "Enable remote debugging of the login browser",
+                    "default": false,
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
+                },
+                "remoteDebuggingPort": {
+                    "type": "number",
+                    "label": "Remote debugging port (localhost only)",
+                    "default": 9222,
+                    "min": 1024,
+                    "max": 65535,
+                    "hidden": "!data.remoteDebugging",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
+                }
+            }
+        },
         "_GeofencingSettings": {
             "type": "panel",
             "label": "Geofencing Settings",

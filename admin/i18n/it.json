@@ -1,17 +1,23 @@
 {
+    "Enable remote debugging of the login browser": "Attiva il debug remoto del browser di accesso",
     "Fences, will create boolean states for each fence to indicate if user is within the fence": "Recinti: creerà stati booleani per ciascun recinto per indicare se l'utente si trova all'interno del recinto",
     "Geofencing Settings": "Impostazioni del geofencing",
     "Google Settings": "Impostazioni di Google",
     "ID of state": "ID dello stato",
     "Instance of iobroker.places to use": "Istanza di iobroker.places da utilizzare",
     "Latitude": "Latitudine",
+    "Login Settings": "Impostazioni di accesso",
     "Longitude": "Longitudine",
     "Name of fence": "Nome della recinzione",
     "Password of ioBroker Google Account": "Password dell'account Google ioBroker",
     "Polling Interval (in seconds, at least 60 seconds)": "Intervallo di polling (in secondi, almeno 60 secondi)",
     "Radius (m)": "Raggio (m)",
+    "Remote debugging port (localhost only)": "Porta di debug remoto (solo localhost)",
     "User": "Utente",
     "Username of ioBroker Google Account": "Nome utente dell'account Google ioBroker",
+    "Wait for confirmation (in seconds, 0 disables waiting)": "Attendere la conferma (in secondi, 0 disattiva l'attesa)",
     "google-sharedlocations2 adapter settings": "Impostazioni dell'adattatore per google-sharedlocations2",
-    "labelAccountHint": "Fornisci le credenziali di un account Google ioBroker con cui condividi la tua posizione utilizzando l'app Google Maps. Si consiglia vivamente di creare un account Google dedicato a questo scopo."
+    "labelAccountHint": "Fornisci le credenziali di un account Google ioBroker con cui condividi la tua posizione utilizzando l'app Google Maps. Si consiglia vivamente di creare un account Google dedicato a questo scopo.",
+    "labelChallengeHint": "Se Google richiede una conferma aggiuntiva durante l'accesso (2FA, \"Sei tu?\", \"Scegli il numero mostrato\"), l'adattatore mantiene aperto il browser invisibile per questo tempo. Il numero da scegliere sul telefono viene pubblicato nello stato info.loginPageText, uno screenshot del browser in info.loginScreenshot.",
+    "labelRemoteDebuggingHint": "Solo per la risoluzione dei problemi: apre una porta di debug di Chrome DevTools per il browser di accesso, così da poterlo osservare e controllare. La porta è associata solo a localhost - raggiungila tramite un tunnel SSH, per esempio \"ssh -L 9222:localhost:9222 utente@host-iobroker\", poi apri http://localhost:9222 in Chrome. Chiunque possa raggiungere questa porta può controllare il browser e leggere la sessione Google, quindi lasciala disattivata durante il normale funzionamento."
 }

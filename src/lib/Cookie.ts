@@ -11,8 +11,10 @@ const execFileAsync = promisify(execFile);
 
 /** File name of the login screenshot inside the instance file storage. */
 const LOGIN_SCREENSHOT_FILE = 'login/current.png';
-/** How long to keep the browser open while the user confirms a Google challenge (2FA, "is this you?"). */
-const CHALLENGE_TIMEOUT_SECONDS = 120;
+/** Fallback for how long to keep the browser open while the user confirms a Google challenge, if not configured. */
+const DEFAULT_CHALLENGE_TIMEOUT_SECONDS = 120;
+/** Fallback remote debugging port, if remote debugging is enabled but no port is configured. */
+const DEFAULT_REMOTE_DEBUGGING_PORT = 9222;
 
 /**
  * Helper class to manage Google cookies.
@@ -244,10 +246,21 @@ export class Cookie {
             return;
         }
         this.log.debug('Starting browser.');
+        const args = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled'];
+        if (this.adapter.config.remoteDebugging) {
+            const port = this.adapter.config.remoteDebuggingPort || DEFAULT_REMOTE_DEBUGGING_PORT;
+            //no --remote-debugging-address on purpose: Chrome then only listens on localhost. Whoever reaches
+            //this port can control the browser and read the Google session, so it has to be tunneled (ssh -L).
+            args.push(`--remote-debugging-port=${port}`);
+            this.log.info(
+                `Remote debugging enabled on localhost:${port}. Forward the port to your PC, for example ` +
+                    `"ssh -L ${port}:localhost:${port} user@iobroker-host", then open http://localhost:${port} in Chrome.`,
+            );
+        }
         try {
             this.browser = await puppeteer.launch({
                 headless: true,
-                args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled'],
+                args,
                 ignoreDefaultArgs: ['--enable-automation'], //h// ide automation flag, did not help.
                 userDataDir: this.dataDir,
             });
@@ -624,7 +637,17 @@ export class Cookie {
                 //still on the login page -> Google asks for something else, most likely a 2FA confirmation.
                 if (page.url().includes('accounts.google.com')) {
                     logDebug('Still on login page after password, Google seems to want a confirmation.');
-                    await this.waitForLoginChallenge(page, CHALLENGE_TIMEOUT_SECONDS);
+                    const timeout = this.adapter.config.challengeTimeout ?? DEFAULT_CHALLENGE_TIMEOUT_SECONDS;
+                    if (timeout > 0) {
+                        await this.waitForLoginChallenge(page, timeout);
+                    } else {
+                        //waiting disabled, but still publish what Google wants, so the user can see it in the log.
+                        await this.captureBrowserState(page, 'Google wants an additional confirmation');
+                        this.log.warn(
+                            'Google wants an additional confirmation, but waiting is disabled (challengeTimeout = 0). ' +
+                                'See state info.loginPageText / info.loginScreenshot.',
+                        );
+                    }
                 }
 
                 logDebug('navigating to google maps to load right cookies.');

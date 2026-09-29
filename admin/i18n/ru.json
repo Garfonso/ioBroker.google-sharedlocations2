@@ -1,17 +1,23 @@
 {
+    "Enable remote debugging of the login browser": "Включить удалённую отладку браузера входа",
     "Fences, will create boolean states for each fence to indicate if user is within the fence": "Заборы: будут создавать логические состояния для каждого забора, чтобы указать, находится ли пользователь внутри забора.",
     "Geofencing Settings": "Настройки геозон",
     "Google Settings": "Настройки Google",
     "ID of state": "идентификатор штата",
     "Instance of iobroker.places to use": "Экземпляр iobroker.places для использования",
     "Latitude": "Широта",
+    "Login Settings": "Настройки входа",
     "Longitude": "Долгота",
     "Name of fence": "Название забора",
     "Password of ioBroker Google Account": "Пароль учетной записи Google ioBroker",
     "Polling Interval (in seconds, at least 60 seconds)": "Интервал опроса (в секундах, не менее 60 секунд)",
     "Radius (m)": "Радиус (м)",
+    "Remote debugging port (localhost only)": "Порт удалённой отладки (только localhost)",
     "User": "Пользователь",
     "Username of ioBroker Google Account": "Имя пользователя учетной записи Google ioBroker",
+    "Wait for confirmation (in seconds, 0 disables waiting)": "Ожидание подтверждения (в секундах, 0 отключает ожидание)",
     "google-sharedlocations2 adapter settings": "Настройки адаптера для google-sharedlocations2",
-    "labelAccountHint": "Укажите учетные данные учетной записи Google ioBroker, с которой вы делитесь своим местоположением с помощью приложения Google Maps. Для этой цели настоятельно рекомендуется создать специальную учетную запись Google."
+    "labelAccountHint": "Укажите учетные данные учетной записи Google ioBroker, с которой вы делитесь своим местоположением с помощью приложения Google Maps. Для этой цели настоятельно рекомендуется создать специальную учетную запись Google.",
+    "labelChallengeHint": "Если Google запрашивает дополнительное подтверждение при входе (2FA, «Это вы?», «Выберите показанное число»), адаптер держит невидимый браузер открытым в течение этого времени. Число, которое нужно выбрать на телефоне, публикуется в состоянии info.loginPageText, скриншот браузера — в info.loginScreenshot.",
+    "labelRemoteDebuggingHint": "Только для диагностики: открывает порт отладки Chrome DevTools для браузера входа, чтобы за ним можно было наблюдать и управлять им. Порт привязан только к localhost — подключайтесь через SSH-туннель, например \"ssh -L 9222:localhost:9222 пользователь@хост-iobroker\", затем откройте http://localhost:9222 в Chrome. Любой, кто имеет доступ к этому порту, может управлять браузером и прочитать сессию Google, поэтому в обычном режиме оставляйте его выключенным."
 }

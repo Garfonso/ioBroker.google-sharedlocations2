@@ -1,17 +1,23 @@
 {
+    "Enable remote debugging of the login browser": "Activer le débogage à distance du navigateur de connexion",
     "Fences, will create boolean states for each fence to indicate if user is within the fence": "Clôtures, créera des états booléens pour chaque clôture pour indiquer si l'utilisateur se trouve à l'intérieur de la clôture",
     "Geofencing Settings": "Paramètres de géolocalisation",
     "Google Settings": "Paramètres Google",
     "ID of state": "ID de l'état",
     "Instance of iobroker.places to use": "Instance de iobroker.places à utiliser",
     "Latitude": "Latitude",
+    "Login Settings": "Paramètres de connexion",
     "Longitude": "Longitude",
     "Name of fence": "Nom de la clôture",
     "Password of ioBroker Google Account": "Mot de passe du compte Google ioBroker",
     "Polling Interval (in seconds, at least 60 seconds)": "Intervalle d'interrogation (en secondes, au moins 60 secondes)",
     "Radius (m)": "Rayon (m)",
+    "Remote debugging port (localhost only)": "Port de débogage à distance (localhost uniquement)",
     "User": "Utilisateur",
     "Username of ioBroker Google Account": "Nom d'utilisateur du compte Google ioBroker",
+    "Wait for confirmation (in seconds, 0 disables waiting)": "Attendre la confirmation (en secondes, 0 désactive l'attente)",
     "google-sharedlocations2 adapter settings": "Paramètres d'adaptateur pour google-sharedlocations2",
-    "labelAccountHint": "Veuillez fournir les informations d'identification d'un compte Google ioBroker avec lequel vous partagez votre position à l'aide de l'application Google Maps. Il est fortement recommandé de créer un compte Google dédié à cet effet."
+    "labelAccountHint": "Veuillez fournir les informations d'identification d'un compte Google ioBroker avec lequel vous partagez votre position à l'aide de l'application Google Maps. Il est fortement recommandé de créer un compte Google dédié à cet effet.",
+    "labelChallengeHint": "Si Google demande une confirmation supplémentaire lors de la connexion (2FA, « Est-ce bien vous ? », « Choisissez le numéro affiché »), l'adaptateur garde le navigateur invisible ouvert pendant ce temps. Le numéro à choisir sur le téléphone est publié dans l'état info.loginPageText, une capture d'écran du navigateur dans info.loginScreenshot.",
+    "labelRemoteDebuggingHint": "Uniquement pour le dépannage : ouvre un port de débogage Chrome DevTools pour le navigateur de connexion, afin de pouvoir l'observer et le contrôler. Le port est lié à localhost uniquement - accédez-y via un tunnel SSH, par exemple \"ssh -L 9222:localhost:9222 utilisateur@hote-iobroker\", puis ouvrez http://localhost:9222 dans Chrome. Toute personne pouvant atteindre ce port peut contrôler le navigateur et lire la session Google : laissez-le désactivé en fonctionnement normal."
 }

@@ -1,17 +1,23 @@
 {
+    "Enable remote debugging of the login browser": "Remote-Debugging des Login-Browsers aktivieren",
     "Fences, will create boolean states for each fence to indicate if user is within the fence": "Fences erstellen boolesche Zustände für jeden Fence, um anzuzeigen, ob sich der Benutzer innerhalb des Bereichs befindet",
     "Geofencing Settings": "Geofencing-Einstellungen",
     "Google Settings": "Google-Einstellungen",
     "ID of state": "ID des Staates",
     "Instance of iobroker.places to use": "Zu verwendende Instanz von iobroker.places",
     "Latitude": "Breitengrad",
+    "Login Settings": "Login-Einstellungen",
     "Longitude": "Längengrad",
     "Name of fence": "Name des Bereichs",
     "Password of ioBroker Google Account": "Passwort des ioBroker-Google-Kontos",
     "Polling Interval (in seconds, at least 60 seconds)": "Abfrageintervall (in Sekunden, mindestens 60 Sekunden)",
     "Radius (m)": "Radius (m)",
+    "Remote debugging port (localhost only)": "Remote-Debugging-Port (nur localhost)",
     "User": "Benutzer",
     "Username of ioBroker Google Account": "Benutzername des ioBroker-Google-Kontos",
+    "Wait for confirmation (in seconds, 0 disables waiting)": "Auf Bestätigung warten (in Sekunden, 0 deaktiviert das Warten)",
     "google-sharedlocations2 adapter settings": "Adaptereinstellungen für google-sharedlocations2",
-    "labelAccountHint": "Bitte geben Sie die Anmeldeinformationen eines ioBroker-Google-Kontos an, mit dem Sie Ihren Standort über die Google Maps-App teilen. Es wird dringend empfohlen, zu diesem Zweck ein dediziertes Google-Konto zu erstellen."
+    "labelAccountHint": "Bitte geben Sie die Anmeldeinformationen eines ioBroker-Google-Kontos an, mit dem Sie Ihren Standort über die Google Maps-App teilen. Es wird dringend empfohlen, zu diesem Zweck ein dediziertes Google-Konto zu erstellen.",
+    "labelChallengeHint": "Wenn Google beim Login eine zusätzliche Bestätigung verlangt (2FA, \"Bist das du?\", \"Wähle die angezeigte Zahl\"), hält der Adapter den unsichtbaren Browser so lange offen. Die Zahl, die am Handy ausgewählt werden muss, steht im State info.loginPageText, ein Screenshot des Browsers in info.loginScreenshot.",
+    "labelRemoteDebuggingHint": "Nur zur Fehlersuche: öffnet einen Chrome-DevTools-Debug-Port für den Login-Browser, damit dieser beobachtet und gesteuert werden kann. Der Port ist nur an localhost gebunden - erreichbar über einen SSH-Tunnel, zum Beispiel \"ssh -L 9222:localhost:9222 user@iobroker-host\", danach http://localhost:9222 in Chrome öffnen. Wer diesen Port erreichen kann, kann den Browser steuern und die Google-Sitzung auslesen. Im Normalbetrieb also ausgeschaltet lassen."
 }

@@ -1,17 +1,23 @@
 {
+    "Enable remote debugging of the login browser": "Włącz zdalne debugowanie przeglądarki logowania",
     "Fences, will create boolean states for each fence to indicate if user is within the fence": "Ogrodzenia utworzy stany logiczne dla każdego ogrodzenia, aby wskazać, czy użytkownik znajduje się w obrębie ogrodzenia",
     "Geofencing Settings": "Ustawienia geofencingu",
     "Google Settings": "Ustawienia Google",
     "ID of state": "Identyfikator stanu",
     "Instance of iobroker.places to use": "Instancja iobroker.places do użycia",
     "Latitude": "Szerokość",
+    "Login Settings": "Ustawienia logowania",
     "Longitude": "Długość geograficzna",
     "Name of fence": "Nazwa ogrodzenia",
     "Password of ioBroker Google Account": "Hasło do konta Google ioBroker",
     "Polling Interval (in seconds, at least 60 seconds)": "Interwał odpytywania (w sekundach, co najmniej 60 sekund)",
     "Radius (m)": "Promień (m)",
+    "Remote debugging port (localhost only)": "Port zdalnego debugowania (tylko localhost)",
     "User": "Użytkownik",
     "Username of ioBroker Google Account": "Nazwa użytkownika konta Google ioBroker",
+    "Wait for confirmation (in seconds, 0 disables waiting)": "Czekaj na potwierdzenie (w sekundach, 0 wyłącza oczekiwanie)",
     "google-sharedlocations2 adapter settings": "Ustawienia adaptera dla google-sharedlocations2",
-    "labelAccountHint": "Podaj dane uwierzytelniające konta Google ioBroker, któremu udostępniasz swoją lokalizację za pomocą aplikacji Google Maps. Zdecydowanie zaleca się utworzenie w tym celu dedykowanego konta Google."
+    "labelAccountHint": "Podaj dane uwierzytelniające konta Google ioBroker, któremu udostępniasz swoją lokalizację za pomocą aplikacji Google Maps. Zdecydowanie zaleca się utworzenie w tym celu dedykowanego konta Google.",
+    "labelChallengeHint": "Jeśli Google poprosi o dodatkowe potwierdzenie podczas logowania (2FA, \"Czy to Ty?\", \"Wybierz wyświetlony numer\"), adapter utrzymuje niewidoczną przeglądarkę otwartą przez ten czas. Numer, który należy wybrać w telefonie, jest publikowany w stanie info.loginPageText, a zrzut ekranu przeglądarki w info.loginScreenshot.",
+    "labelRemoteDebuggingHint": "Tylko do diagnostyki: otwiera port debugowania Chrome DevTools dla przeglądarki logowania, aby móc ją obserwować i sterować nią. Port jest powiązany tylko z localhost - połącz się przez tunel SSH, na przykład \"ssh -L 9222:localhost:9222 uzytkownik@host-iobroker\", a potem otwórz http://localhost:9222 w Chrome. Każdy, kto ma dostęp do tego portu, może sterować przeglądarką i odczytać sesję Google, więc w normalnej pracy pozostaw go wyłączony."
 }

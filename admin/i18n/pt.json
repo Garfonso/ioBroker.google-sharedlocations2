@@ -1,17 +1,23 @@
 {
+    "Enable remote debugging of the login browser": "Ativar a depuração remota do navegador de login",
     "Fences, will create boolean states for each fence to indicate if user is within the fence": "Cercas, criará estados booleanos para cada cerca para indicar se o usuário está dentro da cerca",
     "Geofencing Settings": "Configurações de cerca geográfica",
     "Google Settings": "Configurações do Google",
     "ID of state": "ID do estado",
     "Instance of iobroker.places to use": "Instância de iobroker.places para usar",
     "Latitude": "Latitude",
+    "Login Settings": "Configurações de login",
     "Longitude": "Longitude",
     "Name of fence": "Nome da cerca",
     "Password of ioBroker Google Account": "Senha da conta do Google ioBroker",
     "Polling Interval (in seconds, at least 60 seconds)": "Intervalo de pesquisa (em segundos, pelo menos 60 segundos)",
     "Radius (m)": "Raio (m)",
+    "Remote debugging port (localhost only)": "Porta de depuração remota (apenas localhost)",
     "User": "Usuário",
     "Username of ioBroker Google Account": "Nome de usuário da conta do Google ioBroker",
+    "Wait for confirmation (in seconds, 0 disables waiting)": "Aguardar a confirmação (em segundos, 0 desativa a espera)",
     "google-sharedlocations2 adapter settings": "Configurações do adaptador para google-sharedlocations2",
-    "labelAccountHint": "Forneça as credenciais de uma conta do Google ioBroker com a qual você compartilha sua localização usando o aplicativo Google Maps. É altamente recomendável criar uma Conta do Google dedicada para essa finalidade."
+    "labelAccountHint": "Forneça as credenciais de uma conta do Google ioBroker com a qual você compartilha sua localização usando o aplicativo Google Maps. É altamente recomendável criar uma Conta do Google dedicada para essa finalidade.",
+    "labelChallengeHint": "Se o Google pedir uma confirmação adicional durante o login (2FA, \"É você?\", \"Escolha o número mostrado\"), o adaptador mantém o navegador invisível aberto durante este tempo. O número que tem de escolher no telemóvel é publicado no estado info.loginPageText e uma captura de ecrã do navegador em info.loginScreenshot.",
+    "labelRemoteDebuggingHint": "Apenas para diagnóstico: abre uma porta de depuração do Chrome DevTools para o navegador de login, para o poder observar e controlar. A porta está ligada apenas a localhost - acede-lhe através de um túnel SSH, por exemplo \"ssh -L 9222:localhost:9222 utilizador@host-iobroker\", e depois abre http://localhost:9222 no Chrome. Quem conseguir alcançar esta porta pode controlar o navegador e ler a sessão do Google, por isso mantém-na desativada em funcionamento normal."
 }
