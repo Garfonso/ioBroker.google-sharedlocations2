@@ -1,4 +1,7 @@
 # Older Changes
+## 0.3.3 (2026-02-17)
+* (Garfonso) if deleting cookies, also delete cookies in Browser to force login with username & password.
+
 ## 0.3.2 (2026-02-09)
 * (Garfonso) refresh with browser ignores cookies from adapter
 

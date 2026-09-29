@@ -40,7 +40,7 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.5.0 (2026-09-29)
 * (Garfonso/Claude) added settings for how long to wait for a Google login confirmation and for remote debugging of the login browser.
 * (Garfonso/Claude) fixed several issues in the login: only google cookies are stored again, the faked user agent now matches the Chrome that is really used and login pages are no longer dumped to the console.
 * (Garfonso/Claude) updated puppeteer and test dependencies.
@@ -63,9 +63,6 @@ Copyright and trademark of Google are property of Google.
 
 ### 0.3.4 (2026-04-22)
 * (Garfonso) replaced axios dependency. Tried to make login more robust.
-
-### 0.3.3 (2026-02-17)
-* (Garfonso) if deleting cookies, also delete cookies in Browser to force login with username & password.
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

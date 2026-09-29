@@ -1,6 +1,6 @@
 {
   "name": "iobroker.google-sharedlocations2",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Share your location with iobroker via google maps.",
   "author": {
     "name": "Garfonso",
