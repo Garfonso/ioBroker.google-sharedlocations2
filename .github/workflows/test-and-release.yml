@@ -31,6 +31,40 @@ jobs:
           node-version: '24.x'
           lint: true
 
+  # build/ is committed, because ioBroker can install the adapter directly from GitHub, where no build step
+  # runs. So the compiled output has to match the sources, otherwise git installs get stale JavaScript.
+  build-up-to-date:
+    if: contains(github.event.head_commit.message, '[skip ci]') == false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          # the build does not need a browser, this saves downloading Chrome
+          PUPPETEER_SKIP_DOWNLOAD: 'true'
+
+      - name: Build
+        run: npm run build
+
+      - name: Check that build/ matches the sources
+        run: |
+          if [ -n "$(git status --porcelain -- build/)" ]; then
+            git status --short -- build/
+            git --no-pager diff -- build/
+            echo "::error::The compiled output in build/ does not match the sources. Run 'npm run build' and commit build/."
+            exit 1
+          fi
+          echo "build/ is up to date."
+
   # Runs adapter tests on all supported node versions and OSes
   adapter-tests:
     needs: check-and-lint
@@ -55,7 +89,7 @@ jobs:
 
   # Deploys the final package to NPM
   deploy:
-    needs: [check-and-lint, adapter-tests]
+    needs: [check-and-lint, build-up-to-date, adapter-tests]
 
     # Trigger this step only when a commit on any branch is tagged with a version number
     if: |

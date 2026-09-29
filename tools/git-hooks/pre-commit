@@ -1,0 +1,35 @@
+#!/bin/sh
+# Keeps the committed build output in sync with the sources.
+#
+# build/ is committed on purpose: ioBroker can install this adapter directly from GitHub and a git install
+# runs no build step, so stale JavaScript in build/ would be what users actually run.
+#
+# Enable with: npm run hooks:install
+
+# Only relevant when the sources or the build configuration are part of this commit.
+if ! git diff --cached --name-only | grep -qE '^(src/|tsconfig\.json$|package\.json$)'; then
+    exit 0
+fi
+
+echo "pre-commit: rebuilding build/ ..."
+if ! npm run --silent build; then
+    echo "pre-commit: the build failed, so the commit was aborted."
+    exit 1
+fi
+
+# Compare the freshly built output against what is staged. git status is not used here, because it also
+# reports correctly staged changes and would reject every commit that does contain the rebuilt output.
+# core.filemode is switched off for the comparison: on shared folder mounts (VirtualBox, CIFS) every file
+# looks executable, which would report the whole build as changed although only the mode differs.
+if ! git -c core.filemode=false diff --quiet -- build/ ||
+    [ -n "$(git ls-files --others --exclude-standard -- build/)" ]; then
+    echo ""
+    echo "The compiled output in build/ does not match the sources:"
+    git status --short -- build/
+    echo ""
+    echo "build/ is committed, because ioBroker can install this adapter directly from GitHub."
+    echo "Run 'git add build/' and commit again."
+    exit 1
+fi
+
+exit 0

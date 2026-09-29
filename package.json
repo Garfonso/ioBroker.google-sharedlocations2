@@ -55,6 +55,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
+    "hooks:install": "git config core.hooksPath tools/git-hooks",
     "prepublishOnly": "npm run build",
     "check": "tsc --noEmit",
     "check:test": "tsc --noEmit -p tsconfig.test.json",
