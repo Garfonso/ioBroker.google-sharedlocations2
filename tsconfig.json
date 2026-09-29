@@ -19,6 +19,11 @@
         // This is necessary for the automatic typing of the adapter config
         "resolveJsonModule": true,
 
+        // The TypeScript files are executed directly by node. Node runs them as ES modules (they contain import
+        // statements and there is no "type" in package.json), and ES modules need the file extension in the
+        // import path. So relative imports have to be written as "./lib/User.ts".
+        "allowImportingTsExtensions": true,
+
         // If you want to disable the stricter type checks (not recommended), uncomment the following line
         // "strict": false,
         // And enable some of those features for more fine-grained control

@@ -6,9 +6,9 @@
 // you need to create an adapter
 import * as utils from '@iobroker/adapter-core';
 
-import { User } from './lib/User';
-import { Fence } from './lib/Fence';
-import { Cookie } from './lib/Cookie';
+import { User } from './lib/User.ts';
+import { Fence } from './lib/Fence.ts';
+import { Cookie } from './lib/Cookie.ts';
 
 //used to test timeout against
 const MAX_INT32 = 2 ** 31 - 1; // 2147483647 (hex 0x7FFFFFFF)
