@@ -4,6 +4,7 @@ import type { Browser, Page, CookieData, CookiePriority, CookieSameSite } from '
 import { mkdir, readFile } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { createRequire } from 'node:module';
 import * as path from 'node:path';
 
 const execFileAsync = promisify(execFile);
@@ -314,8 +315,12 @@ export class Cookie {
     private async installBrowser(): Promise<boolean> {
         try {
             this.log.info('Chrome is missing, trying to download the matching version. This can take a while...');
-            // Resolve puppeteer's CLI from the installed package so the downloaded Chrome matches this puppeteer version.
-            const pkgPath = require.resolve('puppeteer/package.json');
+            // Resolve puppeteer's CLI from the installed package so the downloaded Chrome matches this puppeteer
+            // version. node runs these files as ES modules, so there is no require() here and we have to build
+            // one. It is seeded from the working directory (the adapter directory, /opt/iobroker on a real
+            // installation) instead of import.meta.url, because TypeScript compiles this file as CommonJS and
+            // rejects import.meta. Resolution walks up the directories, so it finds node_modules either way.
+            const pkgPath = createRequire(`${process.cwd()}${path.sep}`).resolve('puppeteer/package.json');
             const bin = JSON.parse(await readFile(pkgPath, 'utf8')).bin;
             const binRel = typeof bin === 'string' ? bin : bin.puppeteer;
             const cliPath = path.join(path.dirname(pkgPath), binRel);
