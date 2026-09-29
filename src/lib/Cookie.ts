@@ -222,15 +222,14 @@ export class Cookie {
 
             if (response.status !== 200) {
                 this.log?.error(`Failed improving cookie: ${response.status} - ${response.statusText}`);
-                console.log(response.headers);
-                console.log(await response.text());
+                //response body can be a whole Google account page, so only log a truncated version on debug.
+                this.log?.debug(`Response body was: ${(await response.text()).slice(0, 500)}`);
                 return false;
             }
             await this.augmentCookieFromHeader(response.headers);
             return true;
-        } catch (err: any) {
-            this.log?.error(err);
-            this.log?.info('Connection to google maps failure.');
+        } catch (err) {
+            this.log?.error(`Connection to google maps failed: ${(err as Error).message}`);
             return false;
         }
     }
@@ -270,10 +269,19 @@ export class Cookie {
             await page.evaluateOnNewDocument(() => {
                 Object.defineProperty(navigator, 'webdriver', { get: () => false });
             });
-            await page.setUserAgent({
-                userAgent:
-                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36',
-            });
+            //derive the spoofed user agent from the Chrome we actually run, a version mismatch between the
+            //user agent and the real browser is an obvious bot detection signal. Also keeps working after
+            //puppeteer upgrades that bring a new Chrome.
+            const majorVersion = (await this.browser.version()).match(/Chrome\/(\d+)/)?.[1];
+            if (!majorVersion) {
+                this.log.debug('Could not determine Chrome version, using the user agent Chrome reports itself.');
+            } else {
+                await page.setUserAgent({
+                    userAgent:
+                        `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ` +
+                        `Chrome/${majorVersion}.0.0.0 Safari/537.36`,
+                });
+            }
 
             return page;
         } catch (e) {
@@ -355,6 +363,19 @@ export class Cookie {
             );
         } catch (e) {
             this.log.warn(`Could not read login page text: ${(e as Error).message}`);
+        }
+    }
+
+    /**
+     * Clear the published browser state after a successful login, so an old challenge (and the account data
+     * visible on it) does not stay around in the states.
+     */
+    private async clearBrowserState(): Promise<void> {
+        try {
+            await this.adapter.setState('info.loginPageText', '', true);
+            await this.adapter.setState('info.loginScreenshot', '', true);
+        } catch (e) {
+            this.log.debug(`Could not clear login states: ${(e as Error).message}`);
         }
     }
 
@@ -457,8 +478,8 @@ export class Cookie {
             this.log.warn('Cookie string seems too short, login probably failed!');
         } else {
             this.log.info(`Obtained new cookies from Google login with length ${this.cookies.length}.`);
-            this.cookies = cookies;
             await this.storeCookie();
+            await this.clearBrowserState();
         }
         this.browser = null;
     }
@@ -494,7 +515,7 @@ export class Cookie {
                 } catch (e) {
                     this.log.error(`Error setting cookies in browser: ${(e as Error).message}, trying again...`);
                     const cookie = cookieArray.pop(); //remove last cookie and try again, maybe some cookies are not valid for puppeteer or something.
-                    console.log('Removed cookie:', cookie);
+                    this.log.debug(`Removed cookie: ${cookie?.name}`);
                 }
             }
         }
