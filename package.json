@@ -43,21 +43,24 @@
     "ts-node": "^10.9.2",
     "typescript": "~6.0.3"
   },
-  "main": "src/main.ts",
+  "main": "build/main.js",
   "files": [
     "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).{json,json5}",
     "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
-    "src/**/!(*.test).ts",
+    "build/",
     "www/",
     "io-package.json",
     "LICENSE"
   ],
   "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build",
     "check": "tsc --noEmit",
     "check:test": "tsc --noEmit -p tsconfig.test.json",
     "test:ts": "mocha --config test/mocharc.custom.json src/**/*.test.ts",
     "test:package": "mocha test/package --exit",
-    "test:integration": "mocha test/integration --exit",
+    "test:integration": "npm run build && mocha test/integration --exit",
     "test": "npm run test:ts && npm run test:package",
     "translate": "translate-adapter",
     "release": "release-script",

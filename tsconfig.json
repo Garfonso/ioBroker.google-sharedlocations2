@@ -4,25 +4,22 @@
     // https://github.com/tsconfig/bases#node-22-tsconfigjson
     "extends": "@tsconfig/node22/tsconfig.json",
     "compilerOptions": {
-        // do not compile anything, this file is just to configure type checking
-        // TypeScript files are executed directly without transpilation
-        "noEmit": true,
+        // The sources are compiled to CommonJS in ./build and node runs that output ("npm run build").
+        // Running the .ts files directly would leave the module format up to node's detection, which made it
+        // load them as ES modules while TypeScript compiled them as CommonJS. That mismatch broke relative
+        // imports and require(), so the adapter is built instead.
+        "outDir": "./build/",
+        "rootDir": "./src/",
 
         // check JS files
         "allowJs": true,
         "checkJs": true,
 
         "noEmitOnError": true,
-        "outDir": "./build/",
         "removeComments": false,
 
         // This is necessary for the automatic typing of the adapter config
         "resolveJsonModule": true,
-
-        // The TypeScript files are executed directly by node. Node runs them as ES modules (they contain import
-        // statements and there is no "type" in package.json), and ES modules need the file extension in the
-        // import path. So relative imports have to be written as "./lib/User.ts".
-        "allowImportingTsExtensions": true,
 
         // If you want to disable the stricter type checks (not recommended), uncomment the following line
         // "strict": false,
