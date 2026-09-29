@@ -282,6 +282,34 @@
       "native": {}
     },
     {
+      "_id": "info.loginScreenshot",
+      "type": "state",
+      "common": {
+        "role": "url",
+        "name": "Screenshot of the login browser",
+        "desc": "Path to a screenshot of the (invisible) browser, written when Google asks for a confirmation or the login fails.",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.loginPageText",
+      "type": "state",
+      "common": {
+        "role": "text",
+        "name": "Visible text of the login browser",
+        "desc": "Text Google currently shows in the browser, for example the number to confirm on your phone.",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
       "_id": "fences",
       "type": "folder",
       "common": {

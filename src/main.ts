@@ -54,6 +54,17 @@ export class GoogleSharedlocations2 extends utils.Adapter {
 
         // Reset the connection indicator during startup
         await this.setState('info.connection', false, true);
+
+        //meta object is required to store the login screenshot in the instance file storage
+        await this.setForeignObjectNotExistsAsync(this.namespace, {
+            type: 'meta',
+            common: {
+                name: 'Adapter files',
+                type: 'meta.user',
+            },
+            native: {},
+        });
+
         await this.cookie.init();
         await this.subscribeStatesAsync('info.*');
 

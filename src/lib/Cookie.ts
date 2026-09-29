@@ -9,6 +9,11 @@ import type { RequestCredentials } from 'undici-types/fetch';
 
 const execFileAsync = promisify(execFile);
 
+/** File name of the login screenshot inside the instance file storage. */
+const LOGIN_SCREENSHOT_FILE = 'login/current.png';
+/** How long to keep the browser open while the user confirms a Google challenge (2FA, "is this you?"). */
+const CHALLENGE_TIMEOUT_SECONDS = 120;
+
 /**
  * Helper class to manage Google cookies.
  */
@@ -305,6 +310,75 @@ export class Cookie {
     }
 
     /**
+     * Publish what the (invisible) browser currently shows: a screenshot in the instance file storage and the
+     * visible page text in a state. Google challenges like "choose the number shown" only appear inside the
+     * headless browser, so this is the only way for the user to see which number to confirm on the phone.
+     *
+     * @param page - puppeteer page to capture
+     * @param reason - short description why the capture was made, stored together with the page text
+     */
+    private async captureBrowserState(page: Page, reason: string): Promise<void> {
+        try {
+            const screenshot = Buffer.from(await page.screenshot({ type: 'png' }));
+            await this.adapter.writeFileAsync(this.adapter.namespace, LOGIN_SCREENSHOT_FILE, screenshot);
+            await this.adapter.setState(
+                'info.loginScreenshot',
+                `/files/${this.adapter.namespace}/${LOGIN_SCREENSHOT_FILE}?ts=${Date.now()}`,
+                true,
+            );
+        } catch (e) {
+            this.log.warn(`Could not store login screenshot: ${(e as Error).message}`);
+        }
+        try {
+            //the callback runs in the browser, so document exists there. Typed locally, because the adapter
+            //is compiled without the DOM library.
+            const text = await page.evaluate(
+                () => (globalThis as { document?: { body?: { innerText?: string } } }).document?.body?.innerText || '',
+            );
+            await this.adapter.setState(
+                'info.loginPageText',
+                `${reason}\n${page.url()}\n\n${text.trim().slice(0, 2000)}`,
+                true,
+            );
+        } catch (e) {
+            this.log.warn(`Could not read login page text: ${(e as Error).message}`);
+        }
+    }
+
+    /**
+     * Google sometimes wants an extra confirmation after the password (2FA, "is this you?", "choose the number
+     * shown on your device"). Keep the browser open and publish what it shows, so the user can answer on the
+     * phone instead of the login just timing out.
+     *
+     * @param page - puppeteer page that is still on the Google login
+     * @param timeoutSeconds - how long to wait for the user to confirm
+     * @returns true if the browser left accounts.google.com, i.e. the challenge was answered
+     */
+    private async waitForLoginChallenge(page: Page, timeoutSeconds: number): Promise<boolean> {
+        this.log.warn(
+            `Google wants an additional confirmation. The number to choose on your phone is in state ` +
+                `info.loginPageText, a screenshot of the browser in /files/${this.adapter.namespace}/${LOGIN_SCREENSHOT_FILE}. ` +
+                `Waiting up to ${timeoutSeconds}s for the confirmation.`,
+        );
+        const deadline = Date.now() + timeoutSeconds * 1000;
+        let poll = 0;
+        while (Date.now() < deadline) {
+            if (!page.url().includes('accounts.google.com')) {
+                this.log.info('Confirmation accepted, continuing login.');
+                return true;
+            }
+            //refresh screenshot and text every 15s, the shown challenge can change while we wait
+            if (poll % 3 === 0) {
+                await this.captureBrowserState(page, 'Google wants an additional confirmation');
+            }
+            poll++;
+            await new Promise(resolve => this.adapter.setTimeout(() => resolve(undefined), 5000));
+        }
+        this.log.warn('Google confirmation was not answered in time, giving up this login attempt.');
+        return !page.url().includes('accounts.google.com');
+    }
+
+    /**
      * Request location Data from Google Maps
      *
      * @returns Array of location data or undefined if request failed
@@ -547,6 +621,12 @@ export class Cookie {
                 );
                 await new Promise(resolve => this.adapter.setTimeout(() => resolve(undefined), 3000));
 
+                //still on the login page -> Google asks for something else, most likely a 2FA confirmation.
+                if (page.url().includes('accounts.google.com')) {
+                    logDebug('Still on login page after password, Google seems to want a confirmation.');
+                    await this.waitForLoginChallenge(page, CHALLENGE_TIMEOUT_SECONDS);
+                }
+
                 logDebug('navigating to google maps to load right cookies.');
                 await page.goto('https://www.google.com/maps');
                 logDebug('getting cookies.');
@@ -561,6 +641,15 @@ export class Cookie {
         } catch (e) {
             this.log.error(`Error in puppeteer: ${(e as Error).message}`);
             this.log.error(`The step puppeteer failed was: ${currentStep}`);
+            //publish what the browser was showing, that is usually the only way to see why the login got stuck
+            try {
+                const pages = await this.browser?.pages();
+                if (pages?.length) {
+                    await this.captureBrowserState(pages[0], `Login failed at step: ${currentStep}`);
+                }
+            } catch {
+                /* ignore, we are in the error path already */
+            }
             // try to close browser if open
             await this.cleanUp();
         }
