@@ -5,7 +5,6 @@ import { mkdir, readFile } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import * as path from 'node:path';
-import type { RequestCredentials } from 'undici-types/fetch';
 
 const execFileAsync = promisify(execFile);
 
@@ -209,7 +208,6 @@ export class Cookie {
     async improveCookie(): Promise<boolean> {
         const url = 'https://myaccount.google.com/?hl=en';
         const options = {
-            credentials: 'same-origin' as RequestCredentials, //or do we need 'include' here?
             headers: {
                 Cookie: this.cookies.map(c => `${c.name}=${c.value}`).join('; '),
             },
@@ -430,7 +428,6 @@ export class Cookie {
             'https://www.google.com/maps/rpc/locationsharing/read?authuser=2&hl=en&gl=us&pb=!1m7!8m6!1m3!1i14!2i8413!3i5385!2i6!3x4095!2m3!1e0!2sm!3i407105169!3m7!2sen!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!4e1!5m4!1e4!8m2!1e0!1e1!6m9!1e12!2i2!26m1!4b1!30m1!1f1.3953487873077393!39b1!44e1!50e0!23i4111425';
         const options = {
             method: 'GET',
-            credentials: 'same-origin' as RequestCredentials, //or do we need 'include' here?
             headers: {
                 Cookie: this.cookies.map(c => `${c.name}=${c.value}`).join('; '),
             },
@@ -462,26 +459,25 @@ export class Cookie {
     }
 
     /**
-     * Get cookies from the given page and store them. Also closes Browser.
+     * Read the cookies from the given page and store them in the states, if they look usable.
+     * Closing the browser is up to the caller, use cleanUp() for that.
      *
      * @param page - puppeteer page
      */
-    private async getCookiesFromPage(page: Page): Promise<void> {
+    private async storeCookiesFromPage(page: Page): Promise<void> {
         //using deprecated function, but browser.cookies just does not work...???
         const cookies = await page.cookies();
         const browserCookies = await this.browser!.cookies();
         this.log.debug(`Got ${cookies.length} cookies from page, ${browserCookies.length} from browser.cookies().`);
 
         this.cookies = cookies.filter(c => c.domain.includes('google')); //only keep google cookies, maybe some other cookies are set during login which we do not want to store.
-        await this.browser!.close();
         if (!this.isValid()) {
             this.log.warn('Cookie string seems too short, login probably failed!');
-        } else {
-            this.log.info(`Obtained new cookies from Google login with length ${this.cookies.length}.`);
-            await this.storeCookie();
-            await this.clearBrowserState();
+            return;
         }
-        this.browser = null;
+        this.log.info(`Obtained new cookies from Google login with length ${this.cookies.length}.`);
+        await this.storeCookie();
+        await this.clearBrowserState();
     }
 
     /**
@@ -506,7 +502,11 @@ export class Cookie {
 
         if (withCookies) {
             const cookieArray = [...this.cookies];
-            // somehow we stored wrong cookies... :-/ Try to clean up here.
+            // Legacy: this retry comes from a time when we stored broken cookies, so setCookie could fail and
+            // dropping the last cookie and trying again was a way to get rid of the bad one. That bug is fixed,
+            // so setCookie should succeed on the first run and the loop should break immediately. Kept for
+            // backward compatibility with cookies that were stored by an older version. If the error below ever
+            // shows up in a log again, something is wrong with our stored cookies and this needs a real look.
             while (cookieArray.length > 0) {
                 try {
                     //await page.setCookie(...cookieArray);
@@ -532,7 +532,7 @@ export class Cookie {
             await new Promise(r => this.adapter.setTimeout(() => r(undefined), 5000));
             if (!page.url().includes('accounts.google.com')) {
                 this.log.debug('Browser logged in, refreshing cookie.');
-                await this.getCookiesFromPage(page);
+                await this.storeCookiesFromPage(page);
                 const results = await this.sendRequest();
                 if (results && results.length > 0) {
                     await this.cleanUp();
@@ -614,7 +614,7 @@ export class Cookie {
             await new Promise(resolve => this.adapter.setTimeout(() => resolve(undefined), 3000));
             if (!page.url().includes('accounts.google.com')) {
                 logDebug('Already logged in, refreshing cookie.');
-                await this.getCookiesFromPage(page);
+                await this.storeCookiesFromPage(page);
                 await this.cleanUp();
                 const results = await this.sendRequest();
                 if (results && results.length > 0) {
@@ -674,7 +674,7 @@ export class Cookie {
                 logDebug('navigating to google maps to load right cookies.');
                 await page.goto('https://www.google.com/maps');
                 logDebug('getting cookies.');
-                await this.getCookiesFromPage(page);
+                await this.storeCookiesFromPage(page);
                 await this.cleanUp();
                 const results = await this.sendRequest();
                 if (results && results.length > 0) {
