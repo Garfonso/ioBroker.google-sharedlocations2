@@ -40,7 +40,7 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.5.1 (2026-10-17)
 * (Garfonso/Claude) fixed: after one failed login the adapter never tried to log in again and kept polling without being logged in until it was restarted. Login attempts are now retried with a growing delay.
 * (Garfonso/Claude) fixed: a login confirmation that was not answered in time no longer overwrites working cookies.
 * (Garfonso/Claude) cookies are only treated as a login if the Google session cookie is really there. Before, a few cookies for anonymous visitors were long enough to pass as valid.
@@ -66,9 +66,6 @@ Copyright and trademark of Google are property of Google.
 
 ### 0.3.5 (2026-04-22)
 * (Garfonso) resize logo.
-
-### 0.3.4 (2026-04-22)
-* (Garfonso) replaced axios dependency. Tried to make login more robust.
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

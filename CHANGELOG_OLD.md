@@ -1,4 +1,7 @@
 # Older Changes
+## 0.3.4 (2026-04-22)
+* (Garfonso) replaced axios dependency. Tried to make login more robust.
+
 ## 0.3.3 (2026-02-17)
 * (Garfonso) if deleting cookies, also delete cookies in Browser to force login with username & password.
 
