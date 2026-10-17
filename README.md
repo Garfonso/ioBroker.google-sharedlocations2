@@ -40,6 +40,10 @@ Copyright and trademark of Google are property of Google.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso/Claude) fixed: after one failed login the adapter never tried to log in again and kept polling without being logged in until it was restarted. Login attempts are now retried with a growing delay.
+* (Garfonso/Claude) fixed: a login confirmation that was not answered in time no longer overwrites working cookies.
+
 ### 0.5.0 (2026-09-29)
 * (Garfonso/Claude) added settings for how long to wait for a Google login confirmation and for remote debugging of the login browser.
 * (Garfonso/Claude) fixed several issues in the login: only google cookies are stored again, the faked user agent now matches the Chrome that is really used and login pages are no longer dumped to the console.

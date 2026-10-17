@@ -45,6 +45,12 @@ const Fence_1 = require("./lib/Fence");
 const Cookie_1 = require("./lib/Cookie");
 //used to test timeout against
 const MAX_INT32 = 2 ** 31 - 1; // 2147483647 (hex 0x7FFFFFFF)
+/**
+ * Minimum wait time before the next login attempt, depending on how many attempts failed in a row. The last
+ * value is used for all further attempts. Retrying a failing login on every poll would hammer Google and
+ * risks getting the account blocked, never retrying leaves the adapter stuck until it is restarted.
+ */
+const LOGIN_RETRY_DELAYS = [5 * 60 * 1000, 15 * 60 * 1000, 60 * 60 * 1000, 6 * 60 * 60 * 1000];
 // Load your modules here, e.g.:
 // import * as fs from 'node:fs';
 /**
@@ -55,6 +61,8 @@ class GoogleSharedlocations2 extends utils.Adapter {
     _pollInterval = 300;
     _successFullPolls = 1; // let us try a relogin at start, if cookie does not work.
     _lastBrowserRefresh = 0;
+    _lastLoginAttempt = 0;
+    _failedLoginAttempts = 0;
     _users = {};
     fences = [];
     cookie;
@@ -147,7 +155,9 @@ class GoogleSharedlocations2 extends utils.Adapter {
     pollPositions() {
         this._pollTimeout = this.setTimeout(async () => {
             if (!this.cookie.isValid()) {
-                this.log.debug('Cannot poll positions, no cookies available!');
+                //no usable cookies, so a request would fail anyway. Try to log in instead of idling forever.
+                this.log.debug('Cannot poll positions, no valid cookies available!');
+                await this.tryToGetNewCookies();
             }
             else {
                 this.log.debug('Polling positions with current cookies.');
@@ -166,19 +176,50 @@ class GoogleSharedlocations2 extends utils.Adapter {
             return this.pollPositions();
         }, this._pollInterval * 1000);
     }
+    /**
+     * Try to obtain new cookies after polling failed, with a growing delay between the attempts.
+     *
+     * The delay matters in both directions: the old code reset a counter before the login and only retried
+     * while that counter was positive, so a single failed login stopped the adapter from ever trying again
+     * until it was restarted. Retrying on every poll instead would send a login to Google every minute.
+     */
+    loginRetryDelay(failedAttempts) {
+        //after the first failure we want the first entry, not the second one. 0 failures can happen directly
+        //after a successful login and then means "do not log in again right away".
+        const index = Math.min(Math.max(failedAttempts - 1, 0), LOGIN_RETRY_DELAYS.length - 1);
+        return LOGIN_RETRY_DELAYS[index];
+    }
+    async tryToGetNewCookies() {
+        const delay = this.loginRetryDelay(this._failedLoginAttempts);
+        const sinceLastAttempt = Date.now() - this._lastLoginAttempt;
+        if (this._lastLoginAttempt && sinceLastAttempt < delay) {
+            this.log.debug(`Not logged in, but the last login attempt was only ${Math.round(sinceLastAttempt / 1000)}s ago. ` +
+                `Waiting at least ${Math.round(delay / 1000)}s after ${this._failedLoginAttempts} failed attempts.`);
+            return;
+        }
+        this.log.info('Not logged in, trying to obtain new cookies.');
+        this._lastLoginAttempt = Date.now();
+        this._successFullPolls = 0;
+        if (await this.cookie.loginToGetNewCookies()) {
+            this._failedLoginAttempts = 0;
+        }
+        else {
+            this._failedLoginAttempts += 1;
+            const nextDelay = this.loginRetryDelay(this._failedLoginAttempts);
+            this.log.warn(`Could not obtain new cookies (${this._failedLoginAttempts} failed attempts in a row). ` +
+                `Trying again in ${Math.round(nextDelay / 60000)} minutes. If this keeps failing, set a ` +
+                `cookie manually in state info.currentCookies.`);
+        }
+    }
     async sendRequest() {
         const results = await this.cookie.sendRequest();
         if (!results) {
             await this.setState('info.connection', false, true);
-            if (this._successFullPolls > 0) {
-                //try to get new cookie:
-                this.log.debug(`Polling failed, trying to obtain new cookies, because got ${this._successFullPolls} valid results before.`);
-                this._successFullPolls = 0;
-                await this.cookie.loginToGetNewCookies();
-            }
+            await this.tryToGetNewCookies();
         }
         else {
             this._successFullPolls += 1;
+            this._failedLoginAttempts = 0;
             await this.setState('info.connection', true, true);
             for (const location of results) {
                 const user = new User_1.User(location);

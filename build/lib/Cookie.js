@@ -637,14 +637,23 @@ class Cookie {
                 if (page.url().includes('accounts.google.com')) {
                     logDebug('Still on login page after password, Google seems to want a confirmation.');
                     const timeout = this.adapter.config.challengeTimeout ?? DEFAULT_CHALLENGE_TIMEOUT_SECONDS;
+                    let confirmed = false;
                     if (timeout > 0) {
-                        await this.waitForLoginChallenge(page, timeout);
+                        confirmed = await this.waitForLoginChallenge(page, timeout);
                     }
                     else {
                         //waiting disabled, but still publish what Google wants, so the user can see it in the log.
                         await this.captureBrowserState(page, 'Google wants an additional confirmation');
                         this.log.warn('Google wants an additional confirmation, but waiting is disabled (challengeTimeout = 0). ' +
                             'See state info.loginPageText / info.loginScreenshot.');
+                    }
+                    if (!confirmed) {
+                        //Without the confirmation we are not logged in. Reading the cookies anyway would store
+                        //the few cookies google.com sets for anonymous visitors and overwrite a working cookie
+                        //store, which then keeps failing until someone sets a cookie by hand.
+                        this.log.error('The login was not confirmed, so the previous cookies are kept.');
+                        await this.cleanUp();
+                        return false;
                     }
                 }
                 logDebug('navigating to google maps to load right cookies.');
