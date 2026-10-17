@@ -14,6 +14,13 @@ const LOGIN_SCREENSHOT_FILE = 'login/current.png';
 const DEFAULT_CHALLENGE_TIMEOUT_SECONDS = 120;
 /** Fallback remote debugging port, if remote debugging is enabled but no port is configured. */
 const DEFAULT_REMOTE_DEBUGGING_PORT = 9222;
+/**
+ * Cookies a logged in Google session always has. Only checking the length of the cookie string accepted the
+ * few cookies google.com sets for anonymous visitors, so a failed login could overwrite a working store.
+ * Kept deliberately short: a name that is missing although the session works would make the adapter throw
+ * away usable cookies. More names can be added if they turn out to be always present.
+ */
+const REQUIRED_COOKIE_NAMES = ['SID'];
 
 /**
  * Helper class to manage Google cookies.
@@ -732,8 +739,18 @@ export class Cookie {
      * Check if the current cookie is valid.
      */
     isValid(): boolean {
-        // we can not really check if cookie is valid without sending a request, but if the cookie string is very short, it is probably not valid.
-        // maybe change that to some check against the array length in future?
+        // we can not really check if cookie is valid without sending a request, but we can see if it looks
+        // like a logged in session at all: the session cookies have to be there and it must not be too short.
+        const present = new Set(this.cookies.filter(c => c.value).map(c => c.name));
+        const missing = REQUIRED_COOKIE_NAMES.filter(name => !present.has(name));
+        if (missing.length > 0) {
+            //log the names we do have, that is what tells you afterwards what went wrong. Never the values.
+            this.log?.debug(
+                `Cookies do not look like a Google session, missing: ${missing.join(', ')}. ` +
+                    `Available cookies: ${[...present].join(', ') || '(none)'}`,
+            );
+            return false;
+        }
         return this.cookies.map(c => `${c.name}=${c.value}`).join('; ').length > 50;
     }
 }

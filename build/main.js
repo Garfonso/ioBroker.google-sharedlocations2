@@ -182,6 +182,8 @@ class GoogleSharedlocations2 extends utils.Adapter {
      * The delay matters in both directions: the old code reset a counter before the login and only retried
      * while that counter was positive, so a single failed login stopped the adapter from ever trying again
      * until it was restarted. Retrying on every poll instead would send a login to Google every minute.
+     *
+     * @param failedAttempts
      */
     loginRetryDelay(failedAttempts) {
         //after the first failure we want the first entry, not the second one. 0 failures can happen directly
