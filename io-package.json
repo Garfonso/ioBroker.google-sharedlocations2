@@ -3,6 +3,19 @@
     "name": "google-sharedlocations2",
     "version": "0.5.0",
     "news": {
+      "0.5.1": {
+        "en": "the login is better protected now, so the adapter no longer stays logged out.",
+        "de": "der Login ist jetzt besser abgesichert, der Adapter bleibt nicht mehr dauerhaft abgemeldet.",
+        "ru": "вход теперь лучше защищён, поэтому адаптер больше не остаётся разлогиненным.",
+        "pt": "o login está agora melhor protegido, por isso o adaptador já não fica permanentemente desconectado.",
+        "nl": "de login is nu beter beveiligd, waardoor de adapter niet meer uitgelogd blijft.",
+        "fr": "la connexion est désormais mieux protégée, l'adaptateur ne reste plus déconnecté.",
+        "it": "l'accesso è ora più protetto, quindi l'adattatore non resta più disconnesso.",
+        "es": "el inicio de sesión está ahora mejor protegido, por lo que el adaptador ya no se queda desconectado.",
+        "pl": "logowanie jest teraz lepiej zabezpieczone, dzięki czemu adapter nie pozostaje wylogowany.",
+        "uk": "вхід тепер краще захищений, тому адаптер більше не залишається розлогіненим.",
+        "zh-cn": "登录过程更可靠，适配器不再长时间处于未登录状态。"
+      },
       "0.5.0": {
         "en": "added settings for how long to wait for a Google login confirmation and for remote debugging of the login browser.\nfixed several issues in the login: only Google cookies are stored again, the faked user agent now matches the Chrome that is really used and login pages are no longer written to the console.",
         "de": "neue Einstellungen: wie lange auf eine Google-Login-Bestätigung gewartet wird und für das Remote-Debugging des Login-Browsers.\nmehrere Probleme beim Login behoben: es werden wieder nur Google-Cookies gespeichert, der gefälschte User-Agent passt jetzt zum tatsächlich verwendeten Chrome und Login-Seiten werden nicht mehr in die Konsole geschrieben.",
