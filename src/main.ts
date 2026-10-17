@@ -167,6 +167,8 @@ export class GoogleSharedlocations2 extends utils.Adapter {
      * The delay matters in both directions: the old code reset a counter before the login and only retried
      * while that counter was positive, so a single failed login stopped the adapter from ever trying again
      * until it was restarted. Retrying on every poll instead would send a login to Google every minute.
+     *
+     * @param failedAttempts
      */
     private loginRetryDelay(failedAttempts: number): number {
         //after the first failure we want the first entry, not the second one. 0 failures can happen directly
@@ -206,6 +208,11 @@ export class GoogleSharedlocations2 extends utils.Adapter {
         const results = await this.cookie.sendRequest();
         if (!results) {
             await this.setState('info.connection', false, true);
+            if (this.cookie.lastRequestFailedDueToNetwork) {
+                //no network is not a login problem, so do not spend a login attempt on it
+                this.log.debug('Request failed because Google was not reachable, leaving the login alone.');
+                return;
+            }
             await this.tryToGetNewCookies();
         } else {
             this._successFullPolls += 1;

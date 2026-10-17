@@ -57,6 +57,23 @@ const DEFAULT_REMOTE_DEBUGGING_PORT = 9222;
  */
 const REQUIRED_COOKIE_NAMES = ['SID'];
 /**
+ * Tells "we have no internet" apart from a real problem with the login or the cookies. puppeteer reports it
+ * as net::ERR_*, fetch throws "fetch failed" and carries the actual reason, for example EAI_AGAIN, in its
+ * cause chain. Such an error says nothing about our cookies, so it must not trigger a login.
+ *
+ * @param e - the error to classify
+ * @returns true if the error means the network or DNS was unavailable
+ */
+function isNetworkError(e) {
+    let text = '';
+    let current = e;
+    for (let depth = 0; current instanceof Error && depth < 5; depth++) {
+        text += ` ${current.message} ${current.code ?? ''}`;
+        current = current.cause;
+    }
+    return /ERR_NAME_NOT_RESOLVED|ERR_INTERNET_DISCONNECTED|ERR_NETWORK_CHANGED|ERR_CONNECTION_|ERR_ADDRESS_UNREACHABLE|ERR_PROXY_CONNECTION_FAILED|ERR_TIMED_OUT|fetch failed|ENOTFOUND|EAI_AGAIN|ECONNREFUSED|ECONNRESET|ETIMEDOUT|ENETUNREACH|EHOSTUNREACH/i.test(text);
+}
+/**
  * Helper class to manage Google cookies.
  */
 class Cookie {
@@ -67,6 +84,8 @@ class Cookie {
     log;
     browser = null;
     browserInstallTried = false;
+    /** true if the last request failed because the network was unavailable, so not because of the cookies. */
+    lastRequestFailedDueToNetwork = false;
     dataDir;
     /**
      * Construct cookie helper
@@ -428,6 +447,7 @@ class Cookie {
             this.log.error('Cannot send request, no cookies available!');
             return;
         }
+        this.lastRequestFailedDueToNetwork = false;
         //send request with current cookies
         //see https://github.com/costastf/locationsharinglib/blob/master/locationsharinglib/locationsharinglib.py#L105 for info on parameters
         this.log.debug('Sending request with current cookies');
@@ -461,7 +481,14 @@ class Cookie {
             this.log.info('No shared locations found in the response, probably not logged in.');
         }
         catch (e) {
-            this.log.error(`Error during request: ${e.message}`);
+            if (isNetworkError(e)) {
+                //google was not reachable. Says nothing about our cookies, so do not trigger a login.
+                this.lastRequestFailedDueToNetwork = true;
+                this.log.info(`Could not reach Google (${e.message}), trying again on the next poll.`);
+            }
+            else {
+                this.log.error(`Error during request: ${e.message}`);
+            }
         }
     }
     /**
@@ -538,7 +565,12 @@ class Cookie {
             }
         }
         catch (e) {
-            this.log.error(`Error during cookie refresh: ${e.message}, ${e instanceof Error ? e.stack : ''}`);
+            if (isNetworkError(e)) {
+                this.log.info(`Could not reach Google (${e.message}), skipping the cookie refresh.`);
+            }
+            else {
+                this.log.error(`Error during cookie refresh: ${e.message}, ${e instanceof Error ? e.stack : ''}`);
+            }
         }
         await this.cleanUp();
         return false;
@@ -676,6 +708,13 @@ class Cookie {
             }
         }
         catch (e) {
+            if (isNetworkError(e)) {
+                //Google is not reachable. Retrying with a forced login would only burn login attempts, and a
+                //screenshot of a network error page helps nobody.
+                this.log.info(`Could not reach Google (${e.message}), trying the login again later.`);
+                await this.cleanUp();
+                return false;
+            }
             this.log.error(`Error in puppeteer: ${e.message}`);
             this.log.error(`The step puppeteer failed was: ${currentStep}`);
             //publish what the browser was showing, that is usually the only way to see why the login got stuck

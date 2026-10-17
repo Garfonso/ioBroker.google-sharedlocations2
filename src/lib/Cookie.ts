@@ -23,6 +23,26 @@ const DEFAULT_REMOTE_DEBUGGING_PORT = 9222;
 const REQUIRED_COOKIE_NAMES = ['SID'];
 
 /**
+ * Tells "we have no internet" apart from a real problem with the login or the cookies. puppeteer reports it
+ * as net::ERR_*, fetch throws "fetch failed" and carries the actual reason, for example EAI_AGAIN, in its
+ * cause chain. Such an error says nothing about our cookies, so it must not trigger a login.
+ *
+ * @param e - the error to classify
+ * @returns true if the error means the network or DNS was unavailable
+ */
+function isNetworkError(e: unknown): boolean {
+    let text = '';
+    let current: unknown = e;
+    for (let depth = 0; current instanceof Error && depth < 5; depth++) {
+        text += ` ${current.message} ${(current as { code?: string }).code ?? ''}`;
+        current = (current as { cause?: unknown }).cause;
+    }
+    return /ERR_NAME_NOT_RESOLVED|ERR_INTERNET_DISCONNECTED|ERR_NETWORK_CHANGED|ERR_CONNECTION_|ERR_ADDRESS_UNREACHABLE|ERR_PROXY_CONNECTION_FAILED|ERR_TIMED_OUT|fetch failed|ENOTFOUND|EAI_AGAIN|ECONNREFUSED|ECONNRESET|ETIMEDOUT|ENETUNREACH|EHOSTUNREACH/i.test(
+        text,
+    );
+}
+
+/**
  * Helper class to manage Google cookies.
  */
 export class Cookie {
@@ -33,6 +53,8 @@ export class Cookie {
     log;
     private browser: Browser | null = null;
     private browserInstallTried = false;
+    /** true if the last request failed because the network was unavailable, so not because of the cookies. */
+    lastRequestFailedDueToNetwork = false;
     dataDir: string;
 
     /**
@@ -427,6 +449,7 @@ export class Cookie {
             this.log.error('Cannot send request, no cookies available!');
             return;
         }
+        this.lastRequestFailedDueToNetwork = false;
 
         //send request with current cookies
         //see https://github.com/costastf/locationsharinglib/blob/master/locationsharinglib/locationsharinglib.py#L105 for info on parameters
@@ -461,7 +484,13 @@ export class Cookie {
             }
             this.log.info('No shared locations found in the response, probably not logged in.');
         } catch (e) {
-            this.log.error(`Error during request: ${(e as Error).message}`);
+            if (isNetworkError(e)) {
+                //google was not reachable. Says nothing about our cookies, so do not trigger a login.
+                this.lastRequestFailedDueToNetwork = true;
+                this.log.info(`Could not reach Google (${(e as Error).message}), trying again on the next poll.`);
+            } else {
+                this.log.error(`Error during request: ${(e as Error).message}`);
+            }
         }
     }
 
@@ -547,9 +576,13 @@ export class Cookie {
                 }
             }
         } catch (e) {
-            this.log.error(
-                `Error during cookie refresh: ${(e as Error).message}, ${e instanceof Error ? e.stack : ''}`,
-            );
+            if (isNetworkError(e)) {
+                this.log.info(`Could not reach Google (${(e as Error).message}), skipping the cookie refresh.`);
+            } else {
+                this.log.error(
+                    `Error during cookie refresh: ${(e as Error).message}, ${e instanceof Error ? e.stack : ''}`,
+                );
+            }
         }
         await this.cleanUp();
         return false;
@@ -699,6 +732,13 @@ export class Cookie {
                 }
             }
         } catch (e) {
+            if (isNetworkError(e)) {
+                //Google is not reachable. Retrying with a forced login would only burn login attempts, and a
+                //screenshot of a network error page helps nobody.
+                this.log.info(`Could not reach Google (${(e as Error).message}), trying the login again later.`);
+                await this.cleanUp();
+                return false;
+            }
             this.log.error(`Error in puppeteer: ${(e as Error).message}`);
             this.log.error(`The step puppeteer failed was: ${currentStep}`);
             //publish what the browser was showing, that is usually the only way to see why the login got stuck

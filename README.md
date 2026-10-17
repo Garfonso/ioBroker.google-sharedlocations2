@@ -44,6 +44,7 @@ Copyright and trademark of Google are property of Google.
 * (Garfonso/Claude) fixed: after one failed login the adapter never tried to log in again and kept polling without being logged in until it was restarted. Login attempts are now retried with a growing delay.
 * (Garfonso/Claude) fixed: a login confirmation that was not answered in time no longer overwrites working cookies.
 * (Garfonso/Claude) cookies are only treated as a login if the Google session cookie is really there. Before, a few cookies for anonymous visitors were long enough to pass as valid.
+* (Garfonso/Claude) a network outage no longer starts a login: errors like ERR_NAME_NOT_RESOLVED or "fetch failed" are recognized as "Google not reachable" and simply retried later.
 
 ### 0.5.0 (2026-09-29)
 * (Garfonso/Claude) added settings for how long to wait for a Google login confirmation and for remote debugging of the login browser.
